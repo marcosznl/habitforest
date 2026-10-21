@@ -1,0 +1,103 @@
+name: HabitForest
+options:
+  bundleIdPrefix: com.marcosznl
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    CODE_SIGN_STYLE: Automatic
+    # Set your Apple Developer Team ID here (or in Xcode › Signing & Capabilities).
+    # App Groups — and therefore the interactive widget — need a real team.
+    DEVELOPMENT_TEAM: ""
+    ENABLE_HARDENED_RUNTIME: YES
+    DEAD_CODE_STRIPPING: YES
+
+targets:
+  HabitForest:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+      - path: Shared
+    dependencies:
+      - target: HabitForestWidget
+        embed: true
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: HabitForest
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.productivity
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSHumanReadableCopyright: "© 2026 Marcos"
+        HFAppGroupIdentifier: $(TeamIdentifierPrefix)com.marcosznl.habitforest
+        NSCalendarsFullAccessUsageDescription: O HabitForest grava seus blocos de foco no Calendário e mostra a agenda do dia.
+        NSCalendarsUsageDescription: O HabitForest grava seus blocos de foco no Calendário e mostra a agenda do dia.
+        NSRemindersFullAccessUsageDescription: O HabitForest sincroniza seus hábitos diários com o app Lembretes.
+        NSRemindersUsageDescription: O HabitForest sincroniza seus hábitos diários com o app Lembretes.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.marcosznl.habitforest
+            CFBundleURLSchemes: [habitforest]
+    entitlements:
+      path: App/HabitForest.entitlements
+      properties:
+        # Not sandboxed: the store lives in ~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest.
+        com.apple.security.application-groups:
+          - $(TeamIdentifierPrefix)com.marcosznl.habitforest
+        com.apple.security.personal-information.calendars: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.marcosznl.habitforest
+        PRODUCT_NAME: HabitForest
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_APP_SANDBOX: NO
+        COMBINE_HIDPI_IMAGES: YES
+
+  HabitForestWidget:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Widget
+      - path: Shared
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleDisplayName: HabitForest Widget
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        HFAppGroupIdentifier: $(TeamIdentifierPrefix)com.marcosznl.habitforest
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widget/HabitForestWidget.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups:
+          - $(TeamIdentifierPrefix)com.marcosznl.habitforest
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.marcosznl.habitforest.widget
+        PRODUCT_NAME: HabitForestWidget
+        SKIP_INSTALL: YES
+        ENABLE_APP_SANDBOX: YES
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks
+
+schemes:
+  HabitForest:
+    build:
+      targets:
+        HabitForest: all
+        HabitForestWidget: all
+    run:
+      config: Debug
+    archive:
+      config: Release
