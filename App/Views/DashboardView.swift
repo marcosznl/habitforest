@@ -177,7 +177,7 @@ private struct SidebarView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
                 TreeView(species: .oak, stage: .mature, showsGround: false).frame(width: 26, height: 26)
-                Text("HabitForest").font(.rubik(.title3))
+                Text("Hábitos").font(.rubik(.title3))
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 12)

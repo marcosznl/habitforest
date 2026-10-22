@@ -105,7 +105,7 @@ final class FocusSession {
                 title: "🌲 Foco: \(habit?.name ?? "Sessão livre")",
                 start: startedAt ?? Date.now.addingTimeInterval(-total),
                 minutes: durationMinutes,
-                notes: "Sessão registrada pelo HabitForest."
+                notes: "Sessão registrada pelo app Hábitos."
             )
         }
     }

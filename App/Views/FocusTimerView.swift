@@ -162,7 +162,7 @@ struct FocusTimerView: View {
             title: "🌲 Foco: \(selectedHabit?.name ?? "Sessão livre")",
             start: plannedStart,
             minutes: plannedMinutes,
-            notes: "Bloco planejado no HabitForest."
+            notes: "Bloco planejado no app Hábitos."
         )
         planFeedback = ok ? "Bloco criado no calendário \(EventKitManager.calendarTitle)." : (eventKit.lastError ?? "Falhou.")
         Haptics.perform(ok ? .levelChange : .generic)

@@ -74,7 +74,7 @@ struct MenuBarPopoverView: View {
                 } label: {
                     Image(systemName: "power")
                 }
-                .help("Sair do HabitForest")
+                .help("Sair do Hábitos")
             }
             .buttonStyle(.borderless)
         }

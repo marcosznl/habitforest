@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>HabitForest</string>
+	<string>Hábitos</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -38,14 +38,14 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>O HabitForest grava seus blocos de foco no Calendário e mostra a agenda do dia.</string>
+	<string>O app Hábitos grava seus blocos de foco no Calendário e mostra a agenda do dia.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>O HabitForest grava seus blocos de foco no Calendário e mostra a agenda do dia.</string>
+	<string>O app Hábitos grava seus blocos de foco no Calendário e mostra a agenda do dia.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 Marcos</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>O HabitForest sincroniza seus hábitos diários com o app Lembretes.</string>
+	<string>O app Hábitos sincroniza seus hábitos diários com o app Lembretes.</string>
 	<key>NSRemindersUsageDescription</key>
-	<string>O HabitForest sincroniza seus hábitos diários com o app Lembretes.</string>
+	<string>O app Hábitos sincroniza seus hábitos diários com o app Lembretes.</string>
 </dict>
 </plist>

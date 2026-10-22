@@ -551,13 +551,15 @@
 				CODE_SIGN_ENTITLEMENTS = App/HabitForest.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = NO;
+				EXECUTABLE_NAME = HabitForest;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.marcosznl.habitforest;
-				PRODUCT_NAME = HabitForest;
+				PRODUCT_MODULE_NAME = HabitForest;
+				PRODUCT_NAME = "Hábitos";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -585,13 +587,15 @@
 				CODE_SIGN_ENTITLEMENTS = App/HabitForest.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = NO;
+				EXECUTABLE_NAME = HabitForest;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.marcosznl.habitforest;
-				PRODUCT_NAME = HabitForest;
+				PRODUCT_MODULE_NAME = HabitForest;
+				PRODUCT_NAME = "Hábitos";
 				SDKROOT = macosx;
 			};
 			name = Debug;

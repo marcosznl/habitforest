@@ -32,7 +32,7 @@ struct HabitFocusFilter: SetFocusFilterIntent {
 
 struct StartFocusIntent: AppIntent {
     static var title: LocalizedStringResource = "Iniciar sessão de foco"
-    static var description = IntentDescription("Inicia o temporizador Pomodoro do HabitForest.")
+    static var description = IntentDescription("Inicia o temporizador Pomodoro do app Hábitos.")
     static var openAppWhenRun = true
 
     @Parameter(title: "Minutos", default: 25, inclusiveRange: (1, 180))

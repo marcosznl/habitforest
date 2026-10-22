@@ -78,7 +78,7 @@ struct HabitWidgetView: View {
         if entry.habits.isEmpty {
             VStack(spacing: 6) {
                 Image(systemName: "leaf.fill").font(.rubik(.title))
-                Text("Abra o HabitForest para plantar seu primeiro hábito.")
+                Text("Abra o app Hábitos para plantar seu primeiro hábito.")
                     .font(.inter(.caption)).multilineTextAlignment(.center)
             }
             .foregroundStyle(.white)

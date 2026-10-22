@@ -27,7 +27,7 @@ private struct GeneralSettings: View {
             Section("Abertura") {
                 Toggle("Abrir ao iniciar sessão", isOn: $launchAtLogin)
                     .onChange(of: launchAtLogin) { _, on in setLaunchAtLogin(on) }
-                Text("O HabitForest fica na barra de menus e mantém o Lembretes e o widget sincronizados mesmo com a janela fechada.")
+                Text("O app fica na barra de menus e mantém o Lembretes e o widget sincronizados mesmo com a janela fechada.")
                     .font(.inter(.caption)).foregroundStyle(.secondary)
                 if let loginError {
                     Text(loginError).font(.inter(.caption)).foregroundStyle(.red)
@@ -90,7 +90,7 @@ private struct IntegrationSettings: View {
                         }
                     }
                 }
-                Text("Os banners trazem os botões “Regar Árvore” e “Adiar 15 min”. Configure o filtro em Ajustes do Sistema › Foco › Filtros de Foco › HabitForest para silenciá-los.")
+                Text("Os banners trazem os botões “Regar Árvore” e “Adiar 15 min”. Configure o filtro em Ajustes do Sistema › Foco › Filtros de Foco › Hábitos para silenciá-los.")
                     .font(.inter(.caption)).foregroundStyle(.secondary)
             }
             Section("Calendário e Lembretes") {
@@ -109,7 +109,7 @@ private struct IntegrationSettings: View {
                             await eventKit.syncReminders(store: store)
                         }
                     }
-                Text("Cada hábito vira um lembrete diário na lista HabitForest. Marcar no Lembretes (no Mac ou no iPhone) rega a árvore, e regar aqui marca o lembrete. Com o app fechado, tudo é conciliado na próxima abertura.")
+                Text("Cada hábito vira um lembrete diário na lista Hábitos. Marcar no Lembretes (no Mac ou no iPhone) rega a árvore, e regar aqui marca o lembrete. Com o app fechado, tudo é conciliado na próxima abertura.")
                     .font(.inter(.caption)).foregroundStyle(.secondary)
                 if remindersSync && eventKit.remindersDenied {
                     LabeledContent("Acesso ao Lembretes") {

@@ -1,4 +1,4 @@
-# HabitForest
+# Hábitos
 
 Rastreador de hábitos nativo para macOS no estilo Forest: cada hábito é uma árvore que cresce com a sequência, perde folhas quando você falha um dia e seca quando a sequência quebra.
 
@@ -48,9 +48,11 @@ open HabitForest.xcodeproj
 | Mapa de calor de 365 dias e conclusão por dia da semana | `Views/HeatmapView.swift` |
 | Atalhos / Siri | `ToggleHabitIntent`, `StartFocusIntent`, `OpenForestIntent` |
 
-**Lembretes:** com a sincronização ligada (Ajustes › Integrações), cada hábito vira um lembrete diário na lista HabitForest, criado com um dia de antecedência. Marcar ou desmarcar no Lembretes, no Mac ou no iPhone, rega ou desrega a árvore, e o contrário também vale. Com o app aberto (inclusive só na barra de menus) a sincronização acontece na hora; com o app fechado, os últimos 14 dias são conciliados na próxima abertura. Para ficar sempre aberto, ligue **Abrir ao iniciar sessão** em Ajustes › Geral.
+**Lembretes:** com a sincronização ligada (Ajustes › Integrações), cada hábito vira um lembrete diário na lista Hábitos, criado com um dia de antecedência. Marcar ou desmarcar no Lembretes, no Mac ou no iPhone, rega ou desrega a árvore, e o contrário também vale. Com o app aberto (inclusive só na barra de menus) a sincronização acontece na hora; com o app fechado, os últimos 14 dias são conciliados na próxima abertura. Para ficar sempre aberto, ligue **Abrir ao iniciar sessão** em Ajustes › Geral.
 
-O Filtro de Foco é configurado em **Ajustes do Sistema › Foco › (um Foco) › Filtros de Foco › HabitForest**. Nele você escolhe qual contexto de hábitos aparece e se os lembretes ficam silenciados.
+O app aparece como **Hábitos** (o projeto, o repositório e a pasta do iCloud Drive continuam com o nome HabitForest).
+
+O Filtro de Foco é configurado em **Ajustes do Sistema › Foco › (um Foco) › Filtros de Foco › Hábitos**. Nele você escolhe qual contexto de hábitos aparece e se os lembretes ficam silenciados.
 
 ## Visual
 

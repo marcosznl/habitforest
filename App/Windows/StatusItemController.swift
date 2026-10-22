@@ -14,11 +14,11 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         guard statusItem == nil else { return }
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = item.button {
-            button.image = NSImage(systemSymbolName: "tree.fill", accessibilityDescription: "HabitForest")
+            button.image = NSImage(systemSymbolName: "tree.fill", accessibilityDescription: "Hábitos")
             button.image?.isTemplate = true
             button.action = #selector(statusItemClicked)
             button.target = self
-            button.toolTip = "HabitForest (⌘⇧H)"
+            button.toolTip = "Hábitos (⌘⇧H)"
         }
         statusItem = item
 
