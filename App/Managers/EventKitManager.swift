@@ -14,6 +14,7 @@ final class EventKitManager {
     @ObservationIgnored private let store = EKEventStore()
     private(set) var calendarAuthorized = false
     private(set) var remindersAuthorized = false
+    private(set) var remindersDenied = false
     private(set) var todaysEvents: [EKEvent] = []
     var lastError: String?
 
@@ -23,7 +24,27 @@ final class EventKitManager {
 
     func refreshStatus() {
         calendarAuthorized = EKEventStore.authorizationStatus(for: .event) == .fullAccess
-        remindersAuthorized = EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+        let status = EKEventStore.authorizationStatus(for: .reminder)
+        remindersAuthorized = status == .fullAccess
+        remindersDenied = status == .denied || status == .restricted || status == .writeOnly
+    }
+
+    /// Na abertura: se a sincronização está ligada e o acesso ao Lembretes ainda não foi pedido,
+    /// pede uma vez e já sincroniza (criando a lista HabitForest).
+    func prepareRemindersSync(_ habitStore: HabitStore) async {
+        guard AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) else { return }
+        if EKEventStore.authorizationStatus(for: .reminder) == .notDetermined {
+            await requestRemindersAccess()
+        }
+        refreshStatus()
+        await syncReminders(store: habitStore)
+    }
+
+    /// Abre Ajustes do Sistema › Privacidade e Segurança › Lembretes.
+    func openRemindersPrivacySettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Reminders") {
+            NSWorkspace.shared.open(url)
+        }
     }
 
     func requestCalendarAccess() async {
@@ -38,6 +59,7 @@ final class EventKitManager {
     func requestRemindersAccess() async {
         do {
             remindersAuthorized = try await store.requestFullAccessToReminders()
+            refreshStatus()
         } catch {
             lastError = error.localizedDescription
         }

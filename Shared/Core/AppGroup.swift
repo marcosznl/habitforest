@@ -29,7 +29,7 @@ enum AppGroup {
             SettingsKey.floatingWindow: false,
             SettingsKey.useICloudDrive: true,
             SettingsKey.calendarLogging: false,
-            SettingsKey.remindersSync: false,
+            SettingsKey.remindersSync: true,
             SettingsKey.effectsVolume: 0.6,
             SettingsKey.ambientVolume: 0.5,
             SettingsKey.focusContext: "any",

@@ -20,7 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         MainWindowController.shared.show()
 
         EventKitManager.shared.startObserving(store)
-        Task { await EventKitManager.shared.syncReminders(store: store) }
+        Task { await EventKitManager.shared.prepareRemindersSync(store) }
 
         // Virada do dia: atualiza árvores, widget e lembretes à meia-noite e quando o Mac acorda.
         NSWorkspace.shared.notificationCenter.addObserver(

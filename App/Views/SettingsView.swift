@@ -72,7 +72,7 @@ private struct GeneralSettings: View {
 private struct IntegrationSettings: View {
     @Environment(EventKitManager.self) private var eventKit
     @Environment(HabitStore.self) private var store
-    @AppStorage(SettingsKey.remindersSync, store: AppGroup.defaults) private var remindersSync = false
+    @AppStorage(SettingsKey.remindersSync, store: AppGroup.defaults) private var remindersSync = true
     @State private var notificationsAuthorized = NotificationManager.shared.isAuthorized
 
     var body: some View {
@@ -111,6 +111,11 @@ private struct IntegrationSettings: View {
                     }
                 Text("Cada hábito vira um lembrete diário na lista HabitForest. Marcar no Lembretes (no Mac ou no iPhone) rega a árvore, e regar aqui marca o lembrete. Com o app fechado, tudo é conciliado na próxima abertura.")
                     .font(.inter(.caption)).foregroundStyle(.secondary)
+                if remindersSync && eventKit.remindersDenied {
+                    LabeledContent("Acesso ao Lembretes") {
+                        Button("Abrir Ajustes do Sistema") { eventKit.openRemindersPrivacySettings() }
+                    }
+                }
                 if remindersSync, let last = eventKit.lastReminderSync {
                     LabeledContent("Última sincronização", value: last.formatted(date: .omitted, time: .shortened))
                 }
