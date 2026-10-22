@@ -57,13 +57,13 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
 
     var leafColor: Color {
         switch self {
-        case .oak: Color(red: 0.24, green: 0.56, blue: 0.25)
-        case .pine: Color(red: 0.12, green: 0.42, blue: 0.30)
+        case .oak: Color(red: 0.30, green: 0.62, blue: 0.24)
+        case .pine: Color(red: 0.11, green: 0.40, blue: 0.38)
         case .bonsai: Color(red: 0.36, green: 0.55, blue: 0.17)
         case .cherry: Color(red: 0.96, green: 0.62, blue: 0.75)
         case .willow: Color(red: 0.50, green: 0.70, blue: 0.40)
         case .cactus: Color(red: 0.31, green: 0.62, blue: 0.41)
-        case .sequoia: Color(red: 0.18, green: 0.37, blue: 0.24)
+        case .sequoia: Color(red: 0.16, green: 0.36, blue: 0.27)
         case .bamboo: Color(red: 0.47, green: 0.70, blue: 0.24)
         case .birch: Color(red: 0.71, green: 0.79, blue: 0.30)
         case .ipe: Color(red: 0.97, green: 0.78, blue: 0.14)

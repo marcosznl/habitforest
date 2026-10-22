@@ -226,6 +226,47 @@ struct TreePainter {
         twoTone(&ctx, p, axis: g.cx, light: trunkLight, dark: trunkDark)
     }
 
+    /// Copa em forma de nuvem: uma elipse central com calombos na borda, achatados embaixo.
+    private func cloudCanopy(center: CGPoint, rx: CGFloat, ry: CGFloat, bumps: Int) -> Path {
+        var path = Path(ellipseIn: CGRect(x: center.x - rx * 0.86, y: center.y - ry * 0.86, width: rx * 1.72, height: ry * 1.72))
+        let bump = min(rx, ry) * 0.44
+        for i in 0..<bumps {
+            let a = -Double.pi / 2 + Double(i) / Double(bumps) * 2 * .pi
+            let wobble = 1 + 0.1 * CGFloat(sin(Double(i) * 2.7 + Double(species.rawValue.count)))
+            let r = bump * wobble * (sin(a) > 0.55 ? 0.8 : 1)
+            let x = center.x + CGFloat(cos(a)) * (rx - bump * 0.72)
+            let y = center.y + CGFloat(sin(a)) * (ry - bump * 0.72)
+            path.addEllipse(in: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2))
+        }
+        return path
+    }
+
+    /// Duas tonalidades, brilho no alto à esquerda e sombra embaixo, para dar volume à copa.
+    private func shadeCanopy(_ ctx: inout GraphicsContext, _ canopy: Path, center: CGPoint, rx: CGFloat, ry: CGFloat) {
+        twoTone(&ctx, canopy, axis: center.x + rx * 0.06, light: leafLight, dark: leafDark)
+        var inside = ctx
+        inside.clip(to: canopy)
+        inside.fill(Path(ellipseIn: CGRect(x: center.x - rx * 1.4, y: center.y + ry * 0.42, width: rx * 2.8, height: ry * 1.4)),
+                    with: .color(.black.opacity(0.12)))
+        guard health != .withered else { return }
+        let highlight = leafLight.mixed(with: .white, amount: 0.28)
+        inside.fill(Path(ellipseIn: CGRect(x: center.x - rx * 0.78, y: center.y - ry * 0.98, width: rx * 0.72, height: ry * 0.62)),
+                    with: .color(highlight.opacity(0.65)))
+    }
+
+    /// Pequenas marcas de folhagem: escuras no lado claro e claras no lado escuro.
+    private func leafTicks(_ ctx: inout GraphicsContext, center: CGPoint, rx: CGFloat, ry: CGFloat) {
+        guard health != .withered else { return }
+        for (dx, dy) in [(-0.5, -0.05), (-0.25, 0.35), (0.35, -0.3), (0.55, 0.2), (0.1, 0.05)] {
+            let p = CGPoint(x: center.x + rx * dx, y: center.y + ry * dy)
+            var tick = Path()
+            tick.move(to: CGPoint(x: p.x - rx * 0.09, y: p.y - ry * 0.05))
+            tick.addQuadCurve(to: CGPoint(x: p.x + rx * 0.09, y: p.y - ry * 0.05), control: CGPoint(x: p.x, y: p.y + ry * 0.08))
+            let color = dx < 0.06 ? leafDark.opacity(0.45) : leafLight.opacity(0.45)
+            ctx.stroke(tick, with: .color(color), style: StrokeStyle(lineWidth: max(0.8, rx * 0.04), lineCap: .round))
+        }
+    }
+
     // MARK: - Primeiros estágios
 
     private func drawSeed(_ ctx: inout GraphicsContext, _ g: Geo) {
@@ -320,7 +361,7 @@ struct TreePainter {
         }
     }
 
-    /// Caule com uma folha clara à esquerda e uma escura à direita, a assinatura do estilo.
+    /// Caule com duas folhas arredondadas (clara à esquerda, escura à direita) e nervura central.
     private func drawSeedling(_ ctx: inout GraphicsContext, _ g: Geo, from base: CGFloat, stem stemColor: Color, bud: Color?) {
         let wilt = health == .withered
         let tip = CGPoint(x: g.cx + (wilt ? g.s * 0.06 : 0), y: g.top + (wilt ? g.h * 0.25 : 0))
@@ -332,45 +373,51 @@ struct TreePainter {
         let light = species == .ipe ? Color(red: 0.55, green: 0.75, blue: 0.30) : leafLight
         let dark = species == .ipe ? Color(red: 0.40, green: 0.60, blue: 0.22) : leafDark
         let droop = wilt ? 0.9 : 0
-        ctx.fill(ellipse(CGPoint(x: tip.x - g.s * 0.085, y: tip.y), g.s * 0.18, g.s * 0.085, angle: 0.45 + droop), with: .color(light))
-        ctx.fill(ellipse(CGPoint(x: tip.x + g.s * 0.085, y: tip.y - g.s * 0.01), g.s * 0.18, g.s * 0.085, angle: -0.45 - droop), with: .color(dark))
+        for (side, color) in [(-1.0, light), (1.0, dark)] {
+            let angle = side < 0 ? 0.5 + droop : -0.5 - droop
+            let center = CGPoint(x: tip.x + CGFloat(side) * g.s * 0.1, y: tip.y - g.s * 0.005)
+            let leaf = ellipse(center, g.s * 0.22, g.s * 0.12, angle: angle)
+            ctx.fill(leaf, with: .color(color))
+            var vein = Path()
+            vein.move(to: CGPoint(x: tip.x + CGFloat(side) * g.s * 0.015, y: tip.y))
+            vein.addLine(to: CGPoint(x: center.x + CGFloat(side) * g.s * 0.07 * CGFloat(cos(angle)),
+                                     y: center.y + CGFloat(side) * g.s * 0.07 * CGFloat(sin(angle))))
+            ctx.stroke(vein, with: .color(dark.mixed(with: .black, amount: 0.25).opacity(0.55)),
+                       style: StrokeStyle(lineWidth: max(0.6, g.s * 0.012), lineCap: .round))
+        }
         if let bud, !wilt {
-            ctx.fill(circle(CGPoint(x: tip.x, y: tip.y - g.s * 0.035), g.s * 0.03), with: .color(bud))
+            ctx.fill(circle(CGPoint(x: tip.x, y: tip.y - g.s * 0.04), g.s * 0.032), with: .color(bud))
         }
     }
 
     // MARK: - Espécies
 
-    /// Copa arredondada (carvalho, cerejeira, ipê), com flores opcionais.
+    /// Copa arredondada em forma de nuvem (carvalho, cerejeira, ipê): tronco curto e copa farta.
     private func drawRound(_ ctx: inout GraphicsContext, _ g: Geo, flatten: CGFloat, blossoms: Color? = nil) {
-        let trunkTop = g.ground - g.h * 0.42
-        drawTrunk(&ctx, g, width: g.s * (stage == .ancient ? 0.11 : 0.085), topY: trunkTop - g.h * 0.1)
+        let trunkTop = g.ground - g.h * 0.36
+        drawTrunk(&ctx, g, width: g.s * (stage == .ancient ? 0.1 : 0.08), topY: trunkTop - g.h * 0.08)
 
-        let r = g.h * 0.3
         let center = CGPoint(x: g.cx, y: g.ground - g.h * 0.64)
-        var canopy = Path()
-        let lobes: [(CGFloat, CGFloat, CGFloat)] = stage == .young
-            ? [(0, -0.2, 0.95), (-0.5, 0.15, 0.7), (0.5, 0.15, 0.7)]
-            : [(0, -0.3, 0.95), (-0.55, 0.05, 0.78), (0.55, 0.05, 0.78), (-0.25, 0.35, 0.7), (0.25, 0.35, 0.7)]
-        for (dx, dy, k) in lobes {
-            canopy.addPath(Path(ellipseIn: CGRect(x: center.x + dx * r * 1.25 - r * k * 1.15,
-                                                  y: center.y + dy * r * flatten - r * k * flatten,
-                                                  width: r * k * 2.3, height: r * k * 2 * flatten)))
-        }
-        twoTone(&ctx, canopy, axis: g.cx, light: leafLight, dark: leafDark)
-
-        // Pequenas marcas de textura nas folhas.
-        for (dx, dy) in [(-0.45, -0.1), (-0.15, 0.3), (0.35, -0.25), (0.5, 0.25)] {
-            let p = CGPoint(x: center.x + dx * r, y: center.y + dy * r)
-            ctx.fill(ellipse(p, r * 0.22, r * 0.09, angle: -0.5), with: .color(dx < 0 ? leafDark.opacity(0.35) : leafLight.opacity(0.35)))
-        }
+        let rx = g.h * (stage == .young ? 0.38 : 0.42)
+        let ry = g.h * 0.34 * flatten
+        let bumps = stage == .young ? 7 : (stage == .mature ? 9 : 11)
+        let canopy = cloudCanopy(center: center, rx: rx, ry: ry, bumps: bumps)
+        shadeCanopy(&ctx, canopy, center: center, rx: rx, ry: ry)
+        leafTicks(&ctx, center: center, rx: rx, ry: ry)
 
         if let blossoms, health == .healthy && season != .winter {
-            for i in 0..<12 {
+            for i in 0..<14 {
                 let a = Double(i) * 2.39996
-                let d = r * 1.1 * sqrt(Double(i + 1) / 12)
-                let p = CGPoint(x: center.x + cos(a) * d, y: center.y + sin(a) * d * 0.7)
-                ctx.fill(circle(p, g.s * 0.013), with: .color(blossoms.opacity(0.95)))
+                let d = sqrt(Double(i + 1) / 14)
+                let p = CGPoint(x: center.x + CGFloat(cos(a) * d) * rx * 0.85, y: center.y + CGFloat(sin(a) * d) * ry * 0.8)
+                ctx.fill(circle(p, g.s * 0.014), with: .color(blossoms.opacity(0.95)))
+            }
+        } else if species == .oak && stage == .ancient && health == .healthy && season != .winter {
+            // Carvalho ancestral dá frutinhos.
+            for (dx, dy) in [(-0.5, 0.1), (-0.15, -0.35), (0.3, 0.2), (0.55, -0.15), (-0.05, 0.45)] {
+                let p = CGPoint(x: center.x + rx * dx, y: center.y + ry * dy)
+                ctx.fill(circle(p, g.s * 0.022), with: .color(Color(red: 0.93, green: 0.45, blue: 0.16)))
+                ctx.fill(circle(CGPoint(x: p.x - g.s * 0.006, y: p.y - g.s * 0.006), g.s * 0.007), with: .color(.white.opacity(0.6)))
             }
         }
     }
@@ -382,34 +429,56 @@ struct TreePainter {
         let tiers = stage == .young ? 3 : (stage == .mature ? 4 : 5)
         let foliage = g.h * (1 - trunkShare)
         let step = foliage / CGFloat(tiers)
-        let tierHeight = step * 1.55
+        let tierHeight = step * 1.6
+        let highlight = leafLight.mixed(with: Color(red: 0.85, green: 1, blue: 0.95), amount: 0.25)
         for i in 0..<tiers {
             let t = CGFloat(i) / CGFloat(tiers)
-            let baseY = g.ground - g.h * trunkShare - CGFloat(i) * step * 0.92
-            let half = g.h * widthFactor * 0.5 * (1 - t * 0.62)
+            let baseY = g.ground - g.h * trunkShare - CGFloat(i) * step * 0.9
+            let half = g.h * widthFactor * 0.5 * (1 - t * 0.6)
             let apex = CGPoint(x: g.cx, y: baseY - tierHeight)
 
+            // Andar com laterais levemente estufadas e a borda de baixo em ondas arredondadas.
             var tier = Path()
             tier.move(to: apex)
-            tier.addLine(to: CGPoint(x: g.cx + half, y: baseY))
-            let teeth = 6
-            for k in 1..<teeth {
-                let x = g.cx + half - CGFloat(k) * (2 * half / CGFloat(teeth))
-                tier.addLine(to: CGPoint(x: x, y: baseY - (k.isMultiple(of: 2) ? 0 : tierHeight * 0.12)))
+            tier.addQuadCurve(to: CGPoint(x: g.cx + half, y: baseY),
+                              control: CGPoint(x: g.cx + half * 0.5, y: apex.y + tierHeight * 0.6))
+            let scallops = 4
+            let w = 2 * half / CGFloat(scallops)
+            for k in 0..<scallops {
+                let x0 = g.cx + half - CGFloat(k) * w
+                tier.addQuadCurve(to: CGPoint(x: x0 - w, y: baseY),
+                                  control: CGPoint(x: x0 - w / 2, y: baseY + tierHeight * 0.17))
             }
-            tier.addLine(to: CGPoint(x: g.cx - half, y: baseY))
+            tier.addQuadCurve(to: apex, control: CGPoint(x: g.cx - half * 0.5, y: apex.y + tierHeight * 0.6))
             tier.closeSubpath()
             twoTone(&ctx, tier, axis: g.cx, light: leafLight, dark: leafDark)
 
+            // Faixa de luz na borda esquerda e sombra do andar de cima.
+            var inside = ctx
+            inside.clip(to: tier)
+            var glint = Path()
+            glint.move(to: apex)
+            glint.addLine(to: CGPoint(x: g.cx - half * 1.05, y: baseY + tierHeight * 0.1))
+            glint.addLine(to: CGPoint(x: g.cx - half * 0.62, y: baseY + tierHeight * 0.1))
+            glint.closeSubpath()
+            inside.fill(glint, with: .color(highlight.opacity(0.55)))
+            if i < tiers - 1 {
+                inside.fill(Path(CGRect(x: g.cx - half, y: apex.y, width: half * 2, height: tierHeight * 0.32)),
+                            with: .color(.black.opacity(0.1)))
+            }
+
             if season == .winter && health == .healthy {
                 let capH = tierHeight * 0.38
-                let capHalf = half * 0.38
+                let capHalf = half * 0.4
                 var cap = Path()
                 cap.move(to: apex)
-                cap.addLine(to: CGPoint(x: g.cx + capHalf, y: apex.y + capH))
-                cap.addLine(to: CGPoint(x: g.cx + capHalf * 0.3, y: apex.y + capH * 0.8))
-                cap.addLine(to: CGPoint(x: g.cx - capHalf * 0.3, y: apex.y + capH * 1.05))
-                cap.addLine(to: CGPoint(x: g.cx - capHalf, y: apex.y + capH))
+                cap.addQuadCurve(to: CGPoint(x: g.cx + capHalf, y: apex.y + capH),
+                                 control: CGPoint(x: g.cx + capHalf * 0.5, y: apex.y + capH * 0.6))
+                cap.addQuadCurve(to: CGPoint(x: g.cx, y: apex.y + capH * 0.85),
+                                 control: CGPoint(x: g.cx + capHalf * 0.5, y: apex.y + capH * 1.15))
+                cap.addQuadCurve(to: CGPoint(x: g.cx - capHalf, y: apex.y + capH),
+                                 control: CGPoint(x: g.cx - capHalf * 0.5, y: apex.y + capH * 1.15))
+                cap.addQuadCurve(to: apex, control: CGPoint(x: g.cx - capHalf * 0.5, y: apex.y + capH * 0.6))
                 cap.closeSubpath()
                 twoTone(&ctx, cap, axis: g.cx, light: .white, dark: Color(red: 0.85, green: 0.9, blue: 0.96))
             }
@@ -620,8 +689,8 @@ struct TreePainter {
     }
 
     private func drawBirch(_ ctx: inout GraphicsContext, _ g: Geo) {
-        let tw = g.s * (stage == .ancient ? 0.08 : 0.06)
-        let trunkTop = g.ground - g.h * 0.6
+        let tw = g.s * (stage == .ancient ? 0.075 : 0.06)
+        let trunkTop = g.ground - g.h * 0.55
         drawTrunk(&ctx, g, width: tw, topY: trunkTop)
         var marks = Path()
         var y = g.ground - g.h * 0.08
@@ -635,13 +704,13 @@ struct TreePainter {
         }
         ctx.stroke(marks, with: .color(.black.opacity(0.7)), lineWidth: max(0.7, g.s * 0.012))
 
-        var canopy = Path()
-        let levels: [(CGFloat, CGFloat)] = [(0.55, 0.36), (0.75, 0.3), (0.92, 0.2)]
-        for (at, width) in levels {
-            canopy.addPath(Path(ellipseIn: CGRect(x: g.cx - g.h * width / 2, y: g.ground - g.h * at - g.h * 0.12,
-                                                  width: g.h * width, height: g.h * 0.26)))
-        }
-        twoTone(&ctx, canopy, axis: g.cx, light: leafLight, dark: leafDark)
+        // Copa alta e estreita, em nuvem.
+        let center = CGPoint(x: g.cx, y: g.ground - g.h * 0.7)
+        let rx = g.h * 0.24
+        let ry = g.h * 0.3
+        let canopy = cloudCanopy(center: center, rx: rx, ry: ry, bumps: 8)
+        shadeCanopy(&ctx, canopy, center: center, rx: rx, ry: ry)
+        leafTicks(&ctx, center: center, rx: rx, ry: ry)
     }
 
     private func drawFlowers(_ ctx: inout GraphicsContext, _ g: Geo) {
