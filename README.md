@@ -48,7 +48,7 @@ open HabitForest.xcodeproj
 | Mapa de calor de 365 dias e conclusão por dia da semana | `Views/HeatmapView.swift` |
 | Atalhos / Siri | `ToggleHabitIntent`, `StartFocusIntent`, `OpenForestIntent` |
 
-**Lembretes:** com a sincronização ligada (Ajustes › Integrações), cada hábito vira um lembrete diário na lista Hábitos, criado com um dia de antecedência. Marcar ou desmarcar no Lembretes, no Mac ou no iPhone, rega ou desrega a árvore, e o contrário também vale. Com o app aberto (inclusive só na barra de menus) a sincronização acontece na hora; com o app fechado, os últimos 14 dias são conciliados na próxima abertura. Para ficar sempre aberto, ligue **Abrir ao iniciar sessão** em Ajustes › Geral.
+**Lembretes:** com a sincronização ligada (vem ligada; Ajustes › Integrações), cada hábito vira **um lembrete recorrente diário** na lista Hábitos, só com o nome do hábito. Quem cria o lembrete de cada dia é o próprio Lembretes, no Mac ou no iPhone, mesmo com o app desligado: ao marcar, ele guarda uma cópia concluída daquele dia e passa o lembrete para o dia seguinte. O app lê esse histórico e rega os dias certos (últimos 14 dias): na hora, se estiver aberto (inclusive só na barra de menus), ou na próxima abertura. Regar no app marca o lembrete; desregar remove a conclusão daquele dia. Na Estufa o lembrete some e volta ao sair. Para o app ficar sempre aberto, ligue **Abrir ao iniciar sessão** em Ajustes › Geral.
 
 O app aparece como **Hábitos** (o projeto, o repositório e a pasta do iCloud Drive continuam com o nome HabitForest).
 

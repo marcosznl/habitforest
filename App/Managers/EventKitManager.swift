@@ -132,18 +132,21 @@ final class EventKitManager {
 
     // MARK: - Sincronização com o Lembretes
     //
-    // Cada hábito ganha um lembrete por dia na lista "Hábitos", só com o nome do hábito e a
-    // data. O app guarda um índice (identificador do lembrete → hábito e dia); se o índice não
-    // conhecer um lembrete, ele é reconhecido pelo nome do hábito e pela data. A sincronização é
-    // nos dois sentidos e guarda o último estado combinado de cada lembrete: assim dá para saber
-    // quem mudou desde a última vez, o app ou o Lembretes, e quem mudou vence. Ela roda ao abrir o
-    // app, na virada do dia e sempre que o Lembretes muda (inclusive marcações feitas no iPhone que
-    // chegam pelo iCloud) enquanto o app está aberto, mesmo só na barra de menus. Com o app fechado,
-    // o que mudou é conciliado na próxima abertura, olhando os últimos 14 dias.
+    // Cada hábito tem um único lembrete recorrente (todo dia) na lista "Hábitos", só com o nome do
+    // hábito. Quem cria o lembrete de cada dia é o próprio Lembretes, no Mac ou no iPhone, mesmo com o
+    // app desligado: ao marcar o lembrete recorrente, o Lembretes guarda uma cópia concluída e passa
+    // o recorrente para o dia seguinte. O app lê essas cópias (o histórico) para regar os dias certos.
+    //
+    // A sincronização é nos dois sentidos e guarda o último estado combinado de cada hábito e dia:
+    // assim dá para saber quem mudou desde a última vez, o app ou o Lembretes, e quem mudou vence.
+    // Ela roda ao abrir o app, na virada do dia e sempre que o Lembretes muda enquanto o app está
+    // aberto (mesmo só na barra de menus); com o app fechado, os últimos 14 dias são conciliados na
+    // próxima abertura.
 
     private static let catchUpDays = 14
     private static let syncStateKey = "remindersSyncState"
-    private static let indexKey = "remindersIndex"
+    private static let mastersKey = "remindersMasters"
+    private static let aliasesKey = "remindersAliases"
 
     private var syncEnabled: Bool { AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) && remindersAuthorized }
     @ObservationIgnored private var isSyncing = false
@@ -157,10 +160,16 @@ final class EventKitManager {
         set { AppGroup.defaults.set(newValue, forKey: Self.syncStateKey) }
     }
 
-    /// Identificador de cada lembrete criado → chave do hábito e dia que ele representa.
-    private var reminderIndex: [String: String] {
-        get { AppGroup.defaults.dictionary(forKey: Self.indexKey) as? [String: String] ?? [:] }
-        set { AppGroup.defaults.set(newValue, forKey: Self.indexKey) }
+    /// Hábito → identificador do lembrete recorrente dele.
+    private var masterIndex: [String: String] {
+        get { AppGroup.defaults.dictionary(forKey: Self.mastersKey) as? [String: String] ?? [:] }
+        set { AppGroup.defaults.set(newValue, forKey: Self.mastersKey) }
+    }
+
+    /// Hábito → nomes que ele já teve, para reconhecer cópias antigas depois de uma renomeação.
+    private var aliases: [String: [String]] {
+        get { AppGroup.defaults.dictionary(forKey: Self.aliasesKey) as? [String: [String]] ?? [:] }
+        set { AppGroup.defaults.set(newValue, forKey: Self.aliasesKey) }
     }
 
     /// Passa a sincronizar sempre que o banco do Lembretes/Calendário mudar.
@@ -201,60 +210,6 @@ final class EventKitManager {
         }
     }
 
-    private typealias ReminderTarget = (habitID: UUID, day: Date, key: String)
-
-    private func key(habitID: UUID, day: Date) -> String {
-        "\(habitID.uuidString)|\(DayMath.key(day))"
-    }
-
-    private func parseKey(_ key: String) -> ReminderTarget? {
-        let parts = key.split(separator: "|")
-        guard parts.count == 2, let id = UUID(uuidString: String(parts[0])), let day = DayMath.date(fromKey: String(parts[1])) else { return nil }
-        return (id, day, key)
-    }
-
-    /// Marcador usado pelas versões anteriores (na URL e nas notas), para migrar os lembretes antigos.
-    private static let legacyMarker = /habitforest:\/\/habit\/([0-9A-Fa-f-]{36})\?day=(\d{4}-\d{2}-\d{2})/
-
-    /// Descobre a que hábito e dia o lembrete pertence: pelo índice, pelo marcador antigo ou,
-    /// por último, pelo nome do hábito e pela data.
-    private func identify(_ reminder: EKReminder, habits: [Habit], index: [String: String]) -> ReminderTarget? {
-        if let stored = index[reminder.calendarItemIdentifier], let target = parseKey(stored) {
-            return target
-        }
-        for text in [reminder.url?.absoluteString, reminder.notes].compactMap({ $0 }) {
-            if let match = text.firstMatch(of: Self.legacyMarker),
-               let id = UUID(uuidString: String(match.1)),
-               let day = DayMath.date(fromKey: String(match.2)) {
-                return (id, day, key(habitID: id, day: day))
-            }
-        }
-        let title = (reminder.title ?? "").replacingOccurrences(of: "🌳", with: "").trimmingCharacters(in: .whitespaces)
-        guard let habit = habits.first(where: { $0.name == title }),
-              let components = reminder.dueDateComponents,
-              let due = Calendar.current.date(from: components) else { return nil }
-        let day = DayMath.start(of: due)
-        return (habit.id, day, key(habitID: habit.id, day: day))
-    }
-
-    /// Deixa o lembrete só com o nome do hábito: tira emoji, texto e link de versões anteriores.
-    private func clean(_ reminder: EKReminder, for habit: Habit) -> Bool {
-        var changed = false
-        if reminder.title != habit.name {
-            reminder.title = habit.name
-            changed = true
-        }
-        if reminder.url?.scheme == Self.urlScheme {
-            reminder.url = nil
-            changed = true
-        }
-        if let notes = reminder.notes, notes.contains("\(Self.urlScheme)://") {
-            reminder.notes = nil
-            changed = true
-        }
-        return changed
-    }
-
     private func reminders(in list: EKCalendar) async -> [EKReminder] {
         await withCheckedContinuation { continuation in
             store.fetchReminders(matching: store.predicateForReminders(in: [list])) { reminders in
@@ -263,8 +218,25 @@ final class EventKitManager {
         }
     }
 
-    /// Concilia os últimos 14 dias nos dois sentidos, cria os lembretes de hoje e de amanhã e
-    /// remove lembretes de dias que já passaram sem rega (para a lista não acumular atrasados).
+    private func stateKey(_ habitID: UUID, _ day: Date) -> String {
+        "\(habitID.uuidString)|\(DayMath.key(day))"
+    }
+
+    private static func normalizedTitle(_ reminder: EKReminder) -> String {
+        (reminder.title ?? "").replacingOccurrences(of: "🌳", with: "").trimmingCharacters(in: .whitespaces)
+    }
+
+    private static func dueDay(_ reminder: EKReminder) -> Date? {
+        reminder.dueDateComponents.flatMap { Calendar.current.date(from: $0) }.map(DayMath.start(of:))
+    }
+
+    /// Dia que uma cópia concluída rega: o dia em que foi marcada (ou o vencimento, se faltar a data).
+    private static func creditedDay(_ reminder: EKReminder) -> Date? {
+        reminder.completionDate.map(DayMath.start(of:)) ?? dueDay(reminder)
+    }
+
+    /// Concilia os últimos 14 dias nos dois sentidos e mantém um lembrete recorrente por hábito,
+    /// sempre apontando para o próximo dia ainda não regado.
     func syncReminders(store habitStore: HabitStore) async {
         guard syncEnabled, !isSyncing, let list = remindersList() else { return }
         isSyncing = true
@@ -273,120 +245,166 @@ final class EventKitManager {
         let today = DayMath.today()
         let oldest = DayMath.add(-(Self.catchUpDays - 1), to: today)
         var state = syncState
-        var index = reminderIndex
-        var covered = Set<String>()
+        var masters = masterIndex
+        var names = aliases
+        let all = await reminders(in: list)
+        var claimed = Set<String>()
 
-        for reminder in await reminders(in: list) {
-            let id = reminder.calendarItemIdentifier
-            guard let (habitID, day, key) = identify(reminder, habits: habitStore.habits, index: index), day >= oldest else { continue }
-            guard !covered.contains(key) else { continue }
-            covered.insert(key)
+        // Lembretes avulsos pendentes são sobras do modelo antigo (um por dia) ou cópias desmarcadas:
+        // eles não contam como rega e saem da lista no fim.
+        let strays = all.filter { !$0.hasRecurrenceRules && !$0.isCompleted }
 
-            guard let habit = habitStore.habit(id: habitID) else {
-                // Hábito excluído: tira os lembretes pendentes dele.
-                if !reminder.isCompleted { try? store.remove(reminder, commit: false) }
-                state[key] = nil
-                index[id] = nil
-                continue
+        for habit in habitStore.habits {
+            let id = habit.id.uuidString
+            var known = names[id] ?? []
+            if !known.contains(habit.name) { known.append(habit.name) }
+            names[id] = known
+
+            // Lembrete recorrente do hábito: pelo índice ou pelo nome. Duplicados são removidos.
+            let recurring = all.filter { $0.hasRecurrenceRules && !claimed.contains($0.calendarItemIdentifier) }
+            var master = recurring.first { $0.calendarItemIdentifier == masters[id] }
+                ?? recurring.first { known.contains(Self.normalizedTitle($0)) }
+            for duplicate in recurring where duplicate !== master && known.contains(Self.normalizedTitle(duplicate)) {
+                try? store.remove(duplicate, commit: false)
             }
-            if habit.isPausedInGreenhouse && !reminder.isCompleted && day >= today {
-                try? store.remove(reminder, commit: false)
-                state[key] = nil
-                index[id] = nil
-                continue
-            }
 
-            var needsSave = clean(reminder, for: habit)
-            let inApp = habit.isCompleted(on: day)
-            let inReminders = reminder.isCompleted
-            if inApp != inReminders {
-                let remindersChanged = state[key].map { $0 != inReminders } ?? inReminders
-                if remindersChanged {
-                    habitStore.setCompleted(habit, on: day, completed: inReminders, feedback: false)
-                } else {
-                    reminder.isCompleted = inApp
-                    needsSave = true
+            // Histórico: cópias concluídas deste hábito dentro da janela.
+            var copies = all.filter {
+                !$0.hasRecurrenceRules && $0.isCompleted && known.contains(Self.normalizedTitle($0))
+                    && (Self.creditedDay($0) ?? .distantPast) >= oldest
+            }
+            var doneInReminders: Set<Date> { Set(copies.compactMap(Self.creditedDay)) }
+
+            // Concilia cada dia da janela.
+            var day = oldest
+            while day <= today {
+                let key = stateKey(habit.id, day)
+                let inApp = habit.isCompleted(on: day)
+                let inReminders = doneInReminders.contains(day)
+                if inApp != inReminders {
+                    let remindersChanged = state[key].map { $0 != inReminders } ?? inReminders
+                    if remindersChanged {
+                        habitStore.setCompleted(habit, on: day, completed: inReminders, feedback: false)
+                    } else if inApp {
+                        if day == today, let current = master, Self.dueDay(current) == today {
+                            // Marcar o recorrente faz o Lembretes guardar a cópia e avançar para amanhã.
+                            current.isCompleted = true
+                            try? store.save(current, commit: false)
+                        } else {
+                            copies.append(createCompletedCopy(title: habit.name, on: day, in: list))
+                        }
+                    } else {
+                        for copy in copies where Self.creditedDay(copy) == day {
+                            try? store.remove(copy, commit: false)
+                        }
+                        copies.removeAll { Self.creditedDay($0) == day }
+                    }
                 }
+                state[key] = habit.isCompleted(on: day)
+                day = DayMath.add(1, to: day)
             }
 
-            let final = habit.isCompleted(on: day)
-            if day < today && !final {
-                try? store.remove(reminder, commit: false)
-                state[key] = nil
-                index[id] = nil
-            } else {
-                if needsSave { try? store.save(reminder, commit: false) }
-                state[key] = final
-                index[id] = key
+            // Estufa: sem lembrete recorrente enquanto o hábito está pausado.
+            if habit.isPausedInGreenhouse {
+                if let current = master { try? store.remove(current, commit: false) }
+                masters[id] = nil
+                continue
+            }
+
+            // O recorrente aponta para hoje, ou para amanhã se hoje já foi regado.
+            let next = habit.isCompleted(on: today) ? DayMath.add(1, to: today) : today
+            if master == nil {
+                master = createRecurring(for: habit, startingOn: next, in: list)
+            } else if let current = master {
+                var changed = false
+                if current.title != habit.name { current.title = habit.name; changed = true }
+                if current.isCompleted { current.isCompleted = false; changed = true }
+                if Self.dueDay(current) != next {
+                    current.dueDateComponents = dueComponents(for: habit, on: next)
+                    changed = true
+                }
+                if changed { try? store.save(current, commit: false) }
+            }
+            if let current = master {
+                masters[id] = current.calendarItemIdentifier
+                claimed.insert(current.calendarItemIdentifier)
             }
         }
 
-        for habit in habitStore.habits where !habit.isPausedInGreenhouse {
-            for day in [today, DayMath.add(1, to: today)] {
-                let key = key(habitID: habit.id, day: day)
-                guard !covered.contains(key) else { continue }
-                let done = habit.isCompleted(on: day)
-                if let id = createReminder(for: habit, on: day, completed: done, in: list) {
-                    index[id] = key
-                    state[key] = done
-                }
+        // Recorrentes de hábitos que não existem mais.
+        let habitIDs = Set(habitStore.habits.map(\.id.uuidString))
+        for (habitID, reminderID) in masters where !habitIDs.contains(habitID) {
+            if let orphan = all.first(where: { $0.calendarItemIdentifier == reminderID }) {
+                try? store.remove(orphan, commit: false)
             }
+            masters[habitID] = nil
         }
+        for stray in strays { try? store.remove(stray, commit: false) }
 
-        // Esquece o que saiu da janela de 14 dias.
-        state = state.filter { key, _ in (parseKey(key)?.day ?? .distantPast) >= oldest }
-        index = index.filter { _, key in (parseKey(key)?.day ?? .distantPast) >= oldest }
+        state = state.filter { key, _ in
+            let parts = key.split(separator: "|")
+            guard parts.count == 2, let day = DayMath.date(fromKey: String(parts[1])) else { return false }
+            return day >= oldest
+        }
         syncState = state
-        reminderIndex = index
+        masterIndex = masters
+        aliases = names.filter { habitIDs.contains($0.key) }
+        AppGroup.defaults.removeObject(forKey: "remindersIndex")
         try? store.commit()
         lastReminderSync = .now
     }
 
-    /// Cria o lembrete do dia (só com o nome do hábito e a data) e devolve o identificador dele.
-    private func createReminder(for habit: Habit, on day: Date, completed: Bool, in list: EKCalendar) -> String? {
-        let reminder = EKReminder(eventStore: store)
-        reminder.calendar = list
-        reminder.title = habit.name
+    private func dueComponents(for habit: Habit, on day: Date) -> DateComponents {
         var due = Calendar.current.dateComponents([.year, .month, .day], from: day)
         if habit.reminderEnabled {
             due.hour = habit.reminderHour
             due.minute = habit.reminderMinute
         }
-        reminder.dueDateComponents = due
-        reminder.isCompleted = completed
+        return due
+    }
+
+    private func createRecurring(for habit: Habit, startingOn day: Date, in list: EKCalendar) -> EKReminder? {
+        let reminder = EKReminder(eventStore: store)
+        reminder.calendar = list
+        reminder.title = habit.name
+        reminder.dueDateComponents = dueComponents(for: habit, on: day)
+        reminder.addRecurrenceRule(EKRecurrenceRule(recurrenceWith: .daily, interval: 1, end: nil))
         do {
             try store.save(reminder, commit: false)
-            return reminder.calendarItemIdentifier
+            return reminder
         } catch {
             lastError = error.localizedDescription
             return nil
         }
     }
 
-    /// Espelha no lembrete uma marcação feita no app, se a sincronização estiver ligada.
-    func reflectCompletion(of habit: Habit, on day: Date, completed: Bool) async {
-        guard syncEnabled, !isSyncing, let list = remindersList() else { return }
-        let target = key(habitID: habit.id, day: day)
-        let index = reminderIndex
-        guard let reminder = await reminders(in: list).first(where: { identify($0, habits: [habit], index: index)?.key == target }) else { return }
-        if reminder.isCompleted != completed {
-            reminder.isCompleted = completed
-            try? store.save(reminder, commit: true)
-        }
-        var state = syncState
-        state[target] = completed
-        syncState = state
+    /// Cópia concluída para um dia regado no app que o Lembretes ainda não conhece.
+    private func createCompletedCopy(title: String, on day: Date, in list: EKCalendar) -> EKReminder {
+        let reminder = EKReminder(eventStore: store)
+        reminder.calendar = list
+        reminder.title = title
+        reminder.dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: day)
+        reminder.isCompleted = true
+        reminder.completionDate = Calendar.current.date(byAdding: .hour, value: 12, to: day)
+        try? store.save(reminder, commit: false)
+        return reminder
     }
 
-    /// Remove os lembretes pendentes de um hábito que foi excluído.
+    /// Uma marcação feita no app: a próxima sincronização percebe que foi o app que mudou.
+    func reflectCompletion(of habit: Habit, on day: Date, completed: Bool) async {
+        guard syncEnabled else { return }
+        scheduleSync(HabitStore.shared)
+    }
+
+    /// Remove o lembrete recorrente de um hábito que foi excluído (o histórico fica).
     func removeReminders(forHabit habitID: UUID) async {
         guard syncEnabled, let list = remindersList() else { return }
-        let habits = HabitStore.shared.habits
-        let index = reminderIndex
-        for reminder in await reminders(in: list)
-        where !reminder.isCompleted && identify(reminder, habits: habits, index: index)?.habitID == habitID {
-            try? store.remove(reminder, commit: false)
+        var masters = masterIndex
+        if let reminderID = masters[habitID.uuidString],
+           let master = await reminders(in: list).first(where: { $0.calendarItemIdentifier == reminderID }) {
+            try? store.remove(master, commit: true)
         }
-        try? store.commit()
+        masters[habitID.uuidString] = nil
+        masterIndex = masters
     }
 }
