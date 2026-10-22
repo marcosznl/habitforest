@@ -25,7 +25,6 @@ private struct GeneralSettings: View {
                 Toggle("Manter janela flutuando acima das outras", isOn: $floating)
                     .onChange(of: floating) { _, _ in MainWindowController.shared.applyFloatingPreference() }
                 LabeledContent("Atalho global", value: "⌘⇧H abre a floresta na barra de menus")
-                LabeledContent("Regar rápido", value: "⌘1 … ⌘9")
             }
             Section("Cenário") {
                 Picker("Estações do ano", selection: $hemisphere) {

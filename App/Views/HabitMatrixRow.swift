@@ -2,28 +2,27 @@ import SwiftUI
 
 /// Medidas compartilhadas entre o cabeçalho de dias e as linhas, para as colunas ficarem alinhadas.
 struct HabitMatrixLayout {
-    static let dayCount = 30
+    static let dayCount = 14
     static let nameWidth: CGFloat = 250
     static let actionWidth: CGFloat = 64
-    static let spacing: CGFloat = 3
+    static let spacing: CGFloat = 6
     static let rowPadding: CGFloat = 12
     static let columnGap: CGFloat = 14
 
     let cell: CGFloat
 
-    /// Ajusta o tamanho das células para os 30 dias caberem sem rolagem.
+    /// Ajusta o tamanho das células para as duas semanas ocuparem a largura disponível.
     init(width: CGFloat) {
         let fixed = Self.nameWidth + Self.actionWidth + Self.rowPadding * 2 + Self.columnGap * 2
         let available = width - fixed - Self.spacing * CGFloat(Self.dayCount - 1)
-        cell = min(28, max(12, (available / CGFloat(Self.dayCount)).rounded(.down)))
+        cell = min(46, max(18, (available / CGFloat(Self.dayCount)).rounded(.down)))
     }
 }
 
-/// Um hábito: sua árvore viva, a matriz dos últimos 30 dias e o botão de regar hoje.
+/// Um hábito: sua árvore viva, as últimas duas semanas e o botão de regar hoje.
 struct HabitMatrixRow: View {
     @Environment(HabitStore.self) private var store
     let habit: Habit
-    var index: Int
     var layout: HabitMatrixLayout
     var onEdit: () -> Void
 
@@ -67,19 +66,9 @@ struct HabitMatrixRow: View {
     private func header(summary: StreakCalculator.Summary) -> some View {
         HStack(spacing: 10) {
             Button { choosingSpecies = true } label: {
-                ZStack(alignment: .topLeading) {
-                    TreeEmblemView(species: habit.species, stage: summary.stage, health: summary.health,
-                                   tint: habit.themeColor, animated: true)
-                        .frame(width: 58, height: 58)
-                        .padding(.leading, 6)
-                    if index < 9 {
-                        Text("⌘\(index + 1)")
-                            .font(.inter(.caption2, weight: .bold).monospacedDigit())
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 1)
-                            .background(.regularMaterial, in: Capsule())
-                    }
-                }
+                TreeEmblemView(species: habit.species, stage: summary.stage, health: summary.health,
+                               tint: habit.themeColor, animated: true)
+                    .frame(width: 58, height: 58)
             }
             .buttonStyle(.plain)
             .help("\(habit.species.title) — clique para trocar a árvore")
@@ -212,7 +201,7 @@ struct HabitMatrixHeader: View {
                 ForEach(DayMath.days(count: HabitMatrixLayout.dayCount), id: \.self) { day in
                     let isToday = day == DayMath.today()
                     VStack(spacing: 0) {
-                        Text(isToday ? "Hoje" : day.formatted(.dateTime.weekday(.narrow)))
+                        Text(isToday ? "Hoje" : day.formatted(.dateTime.weekday(layout.cell >= 34 ? .abbreviated : .narrow)))
                             .font(.inter(.caption2, weight: isToday ? .bold : .regular))
                             .fixedSize()
                         Text(day.formatted(.dateTime.day()))
@@ -260,7 +249,7 @@ struct SpeciesPicker: View {
     @Binding var selection: TreeSpecies
     var stage: GrowthStage = .mature
 
-    private let columns = [GridItem(.fixed(84)), GridItem(.fixed(84)), GridItem(.fixed(84))]
+    private let columns = Array(repeating: GridItem(.fixed(84)), count: 4)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {

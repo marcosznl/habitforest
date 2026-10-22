@@ -45,15 +45,6 @@ struct HabitCommands: Commands {
         }
 
         CommandMenu("Hábitos") {
-            ForEach(1...9, id: \.self) { number in
-                Button("Regar hábito \(number)") {
-                    let habits = HabitStore.shared.activeHabits
-                    guard number - 1 < habits.count else { return }
-                    HabitStore.shared.toggle(habits[number - 1])
-                }
-                .keyboardShortcut(KeyEquivalent(Character("\(number)")), modifiers: .command)
-            }
-            Divider()
             ForEach(DashboardSection.allCases) { section in
                 Button(section.title) { MainWindowController.shared.show(section: section) }
             }

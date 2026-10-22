@@ -107,8 +107,8 @@ struct DashboardView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         HabitMatrixHeader(layout: layout)
                         List {
-                            ForEach(Array(store.visibleHabits.enumerated()), id: \.element.id) { index, habit in
-                                HabitMatrixRow(habit: habit, index: index, layout: layout) {
+                            ForEach(store.visibleHabits) { habit in
+                                HabitMatrixRow(habit: habit, layout: layout) {
                                     editing = EditingHabit(id: habit.id)
                                 }
                                 .listRowSeparator(.hidden)

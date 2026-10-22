@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Popover da barra de menus (⌘⇧H de qualquer lugar). ⌘1…⌘9 regam o hábito correspondente.
+/// Popover da barra de menus (⌘⇧H de qualquer lugar). Clique num hábito para regá-lo.
 struct MenuBarPopoverView: View {
     @Environment(HabitStore.self) private var store
     @Environment(FocusSession.self) private var session
@@ -15,8 +15,8 @@ struct MenuBarPopoverView: View {
             } else {
                 ScrollView {
                     VStack(spacing: 4) {
-                        ForEach(Array(store.activeHabits.prefix(12).enumerated()), id: \.element.id) { index, habit in
-                            PopoverHabitRow(habit: habit, number: index < 9 ? index + 1 : nil)
+                        ForEach(store.activeHabits.prefix(12)) { habit in
+                            PopoverHabitRow(habit: habit)
                         }
                     }
                     .padding(8)
@@ -27,7 +27,6 @@ struct MenuBarPopoverView: View {
             footer
         }
         .frame(width: 340)
-        .background(numberShortcuts)
     }
 
     private var header: some View {
@@ -82,29 +81,11 @@ struct MenuBarPopoverView: View {
         .padding(10)
     }
 
-    /// Botões invisíveis que recebem os atalhos ⌘1…⌘9 enquanto o popover está ativo.
-    private var numberShortcuts: some View {
-        ZStack {
-            ForEach(1...9, id: \.self) { number in
-                Button("") { water(number) }
-                    .keyboardShortcut(KeyEquivalent(Character("\(number)")), modifiers: .command)
-            }
-        }
-        .opacity(0)
-        .allowsHitTesting(false)
-    }
-
-    private func water(_ number: Int) {
-        let habits = store.activeHabits
-        guard number - 1 < habits.count else { return }
-        store.toggle(habits[number - 1])
-    }
 }
 
 private struct PopoverHabitRow: View {
     @Environment(HabitStore.self) private var store
     let habit: Habit
-    let number: Int?
 
     @State private var hovering = false
 
@@ -122,9 +103,6 @@ private struct PopoverHabitRow: View {
                         .font(.inter(.caption)).foregroundStyle(.secondary)
                 }
                 Spacer()
-                if let number {
-                    Text("⌘\(number)").font(.inter(.caption).monospaced()).foregroundStyle(.tertiary)
-                }
                 Image(systemName: summary.completedToday ? "drop.fill" : "drop")
                     .font(.rubik(.title3))
                     .foregroundStyle(summary.completedToday ? habit.themeColor : .secondary)

@@ -176,7 +176,10 @@ struct TreePainter {
             } else {
                 switch species {
                 case .oak: drawRound(&tree, g, flatten: 1)
-                case .cherry: drawRound(&tree, g, flatten: 0.85, blossoms: true)
+                case .cherry: drawRound(&tree, g, flatten: 0.85, blossoms: .white)
+                case .ipe: drawRound(&tree, g, flatten: 0.8, blossoms: Color(red: 1, green: 0.95, blue: 0.62))
+                case .palm: drawPalm(&tree, g)
+                case .baobab: drawBaobab(&tree, g)
                 case .pine: drawConifer(&tree, g, widthFactor: 0.66, trunkShare: 0.14)
                 case .sequoia: drawConifer(&tree, g, widthFactor: 0.42, trunkShare: 0.3)
                 case .bonsai: drawBonsai(&tree, g)
@@ -246,27 +249,100 @@ struct TreePainter {
             let shoot = Path(roundedRect: CGRect(x: g.cx - g.s * 0.025, y: g.top, width: g.s * 0.05, height: g.h), cornerRadius: g.s * 0.02)
             twoTone(&ctx, shoot, axis: g.cx, light: leafLight, dark: leafDark)
             ctx.fill(ellipse(CGPoint(x: g.cx + g.s * 0.07, y: g.top + g.h * 0.2), g.s * 0.14, g.s * 0.05, angle: -0.5), with: .color(leafDark))
-        default:
-            let wilt = health == .withered
-            let tip = CGPoint(x: g.cx + (wilt ? g.s * 0.06 : 0), y: g.top + (wilt ? g.h * 0.25 : 0))
+        case .pine, .sequoia:
+            // Pinheirinho: caule curto e dois andares pequenos.
+            let stemTop = g.ground - g.h * 0.3
+            drawTrunk(&ctx, g, width: g.s * 0.035, topY: stemTop)
+            for (i, scale) in [1.0, 0.7].enumerated() {
+                let base = stemTop - CGFloat(i) * g.h * 0.28
+                let half = g.s * (species == .sequoia ? 0.08 : 0.11) * CGFloat(scale)
+                var tier = Path()
+                tier.move(to: CGPoint(x: g.cx, y: base - g.h * 0.45 * CGFloat(scale)))
+                tier.addLine(to: CGPoint(x: g.cx + half, y: base))
+                tier.addLine(to: CGPoint(x: g.cx - half, y: base))
+                tier.closeSubpath()
+                twoTone(&ctx, tier, axis: g.cx, light: leafLight, dark: leafDark)
+            }
+        case .palm:
+            // Brotinho de palmeira: três folhas compridas saindo do chão.
+            let base = CGPoint(x: g.cx, y: g.ground - g.h * 0.12)
+            ctx.fill(ellipse(base, g.s * 0.07, g.h * 0.24), with: .color(trunkBase))
+            for angle in [Double.pi + 0.6, -Double.pi / 2 - 0.15, -0.6] {
+                let length = g.h * 0.75
+                let center = CGPoint(x: base.x + cos(angle) * length / 2, y: base.y + sin(angle) * length / 2)
+                ctx.fill(ellipse(center, length, g.s * 0.07, angle: angle), with: .color(cos(angle) < 0 ? leafLight : leafDark))
+            }
+        case .baobab:
+            // Mini baobá: tronquinho bojudo com um tufo.
+            var trunk = Path()
+            trunk.move(to: CGPoint(x: g.cx - g.s * 0.06, y: g.ground))
+            trunk.addQuadCurve(to: CGPoint(x: g.cx - g.s * 0.025, y: g.ground - g.h * 0.6), control: CGPoint(x: g.cx - g.s * 0.1, y: g.ground - g.h * 0.3))
+            trunk.addLine(to: CGPoint(x: g.cx + g.s * 0.025, y: g.ground - g.h * 0.6))
+            trunk.addQuadCurve(to: CGPoint(x: g.cx + g.s * 0.06, y: g.ground), control: CGPoint(x: g.cx + g.s * 0.1, y: g.ground - g.h * 0.3))
+            trunk.closeSubpath()
+            twoTone(&ctx, trunk, axis: g.cx, light: trunkLight, dark: trunkDark)
+            twoTone(&ctx, ellipse(CGPoint(x: g.cx, y: g.ground - g.h * 0.72), g.s * 0.2, g.s * 0.08), axis: g.cx, light: leafLight, dark: leafDark)
+        case .willow:
+            // Salgueirinho: caule com folhas finas caindo.
+            let tip = CGPoint(x: g.cx, y: g.top)
             var stem = Path()
             stem.move(to: CGPoint(x: g.cx, y: g.ground))
-            stem.addQuadCurve(to: tip, control: CGPoint(x: g.cx - g.s * 0.02, y: g.ground - g.h * 0.5))
-            ctx.stroke(stem, with: .color(wilt ? trunkBase : leafDark), style: StrokeStyle(lineWidth: max(1, g.s * 0.035), lineCap: .round))
-            let droop = wilt ? 0.9 : 0
-            // Folha esquerda clara, direita escura: a assinatura do estilo.
-            ctx.fill(ellipse(CGPoint(x: tip.x - g.s * 0.085, y: tip.y), g.s * 0.18, g.s * 0.085, angle: 0.45 + droop), with: .color(leafLight))
-            ctx.fill(ellipse(CGPoint(x: tip.x + g.s * 0.085, y: tip.y - g.s * 0.01), g.s * 0.18, g.s * 0.085, angle: -0.45 - droop), with: .color(leafDark))
-            if species == .cherry && !wilt {
-                ctx.fill(circle(CGPoint(x: tip.x, y: tip.y - g.s * 0.035), g.s * 0.03), with: .color(.white))
+            stem.addLine(to: tip)
+            ctx.stroke(stem, with: .color(trunkBase), style: StrokeStyle(lineWidth: max(1, g.s * 0.03), lineCap: .round))
+            for dx in [-0.09, -0.03, 0.03, 0.09] {
+                var strand = Path()
+                strand.move(to: tip)
+                strand.addQuadCurve(to: CGPoint(x: tip.x + g.s * dx * 1.4, y: tip.y + g.h * 0.55),
+                                    control: CGPoint(x: tip.x + g.s * dx * 1.6, y: tip.y))
+                ctx.stroke(strand, with: .color(dx < 0 ? leafLight : leafDark), style: StrokeStyle(lineWidth: max(1, g.s * 0.03), lineCap: .round))
             }
+        case .bonsai:
+            // Muda de bonsai já no vasinho.
+            let potTop = g.ground - g.s * 0.08
+            var pot = Path()
+            pot.move(to: CGPoint(x: g.cx - g.s * 0.14, y: potTop))
+            pot.addLine(to: CGPoint(x: g.cx + g.s * 0.14, y: potTop))
+            pot.addLine(to: CGPoint(x: g.cx + g.s * 0.1, y: g.ground))
+            pot.addLine(to: CGPoint(x: g.cx - g.s * 0.1, y: g.ground))
+            pot.closeSubpath()
+            twoTone(&ctx, pot, axis: g.cx, light: Color(red: 0.70, green: 0.38, blue: 0.25), dark: Color(red: 0.55, green: 0.28, blue: 0.18))
+            drawSeedling(&ctx, g, from: potTop, stem: trunkBase, bud: nil)
+        default:
+            // Carvalho, cerejeira, ipê e bétula: caule com duas folhas e um detalhe da espécie.
+            let bud: Color? = switch species {
+            case .cherry: .white
+            case .ipe: Color(red: 0.98, green: 0.80, blue: 0.15)
+            case .oak: Color(red: 0.62, green: 0.42, blue: 0.20)
+            default: nil
+            }
+            let stem = species == .birch ? Color(red: 0.92, green: 0.91, blue: 0.86) : leafDark
+            drawSeedling(&ctx, g, from: g.ground, stem: stem, bud: bud)
+        }
+    }
+
+    /// Caule com uma folha clara à esquerda e uma escura à direita, a assinatura do estilo.
+    private func drawSeedling(_ ctx: inout GraphicsContext, _ g: Geo, from base: CGFloat, stem stemColor: Color, bud: Color?) {
+        let wilt = health == .withered
+        let tip = CGPoint(x: g.cx + (wilt ? g.s * 0.06 : 0), y: g.top + (wilt ? g.h * 0.25 : 0))
+        var stem = Path()
+        stem.move(to: CGPoint(x: g.cx, y: base))
+        stem.addQuadCurve(to: tip, control: CGPoint(x: g.cx - g.s * 0.02, y: (base + tip.y) / 2))
+        ctx.stroke(stem, with: .color(wilt ? trunkBase : stemColor), style: StrokeStyle(lineWidth: max(1, g.s * 0.035), lineCap: .round))
+        // O ipê brota com folhas verdes; o amarelo vem nas flores.
+        let light = species == .ipe ? Color(red: 0.55, green: 0.75, blue: 0.30) : leafLight
+        let dark = species == .ipe ? Color(red: 0.40, green: 0.60, blue: 0.22) : leafDark
+        let droop = wilt ? 0.9 : 0
+        ctx.fill(ellipse(CGPoint(x: tip.x - g.s * 0.085, y: tip.y), g.s * 0.18, g.s * 0.085, angle: 0.45 + droop), with: .color(light))
+        ctx.fill(ellipse(CGPoint(x: tip.x + g.s * 0.085, y: tip.y - g.s * 0.01), g.s * 0.18, g.s * 0.085, angle: -0.45 - droop), with: .color(dark))
+        if let bud, !wilt {
+            ctx.fill(circle(CGPoint(x: tip.x, y: tip.y - g.s * 0.035), g.s * 0.03), with: .color(bud))
         }
     }
 
     // MARK: - Espécies
 
-    /// Copa arredondada (carvalho, cerejeira).
-    private func drawRound(_ ctx: inout GraphicsContext, _ g: Geo, flatten: CGFloat, blossoms: Bool = false) {
+    /// Copa arredondada (carvalho, cerejeira, ipê), com flores opcionais.
+    private func drawRound(_ ctx: inout GraphicsContext, _ g: Geo, flatten: CGFloat, blossoms: Color? = nil) {
         let trunkTop = g.ground - g.h * 0.42
         drawTrunk(&ctx, g, width: g.s * (stage == .ancient ? 0.11 : 0.085), topY: trunkTop - g.h * 0.1)
 
@@ -289,12 +365,12 @@ struct TreePainter {
             ctx.fill(ellipse(p, r * 0.22, r * 0.09, angle: -0.5), with: .color(dx < 0 ? leafDark.opacity(0.35) : leafLight.opacity(0.35)))
         }
 
-        if blossoms && health == .healthy && season != .winter {
+        if let blossoms, health == .healthy && season != .winter {
             for i in 0..<12 {
                 let a = Double(i) * 2.39996
                 let d = r * 1.1 * sqrt(Double(i + 1) / 12)
                 let p = CGPoint(x: center.x + cos(a) * d, y: center.y + sin(a) * d * 0.7)
-                ctx.fill(circle(p, g.s * 0.013), with: .color(.white.opacity(0.95)))
+                ctx.fill(circle(p, g.s * 0.013), with: .color(blossoms.opacity(0.95)))
             }
         }
     }
@@ -456,6 +532,90 @@ struct TreePainter {
             let leafY = g.ground - height + g.h * 0.08
             ctx.fill(ellipse(CGPoint(x: x + g.s * 0.065, y: leafY), g.s * 0.14, g.s * 0.045, angle: -0.5), with: .color(leafDark))
             ctx.fill(ellipse(CGPoint(x: x - g.s * 0.06, y: leafY + g.h * 0.08), g.s * 0.13, g.s * 0.04, angle: 0.45), with: .color(leafLight))
+        }
+    }
+
+    /// Palmeira: tronco curvo com anéis, folhas compridas em leque e cocos nas adultas.
+    private func drawPalm(_ ctx: inout GraphicsContext, _ g: Geo) {
+        let top = CGPoint(x: g.cx + g.s * 0.08, y: g.ground - g.h * 0.8)
+        let bend = CGPoint(x: g.cx - g.s * 0.07, y: g.ground - g.h * 0.45)
+        let tw = g.s * (stage == .ancient ? 0.06 : 0.045)
+
+        var trunk = Path()
+        trunk.move(to: CGPoint(x: g.cx - tw, y: g.ground))
+        trunk.addQuadCurve(to: CGPoint(x: top.x - tw * 0.6, y: top.y), control: CGPoint(x: bend.x - tw, y: bend.y))
+        trunk.addLine(to: CGPoint(x: top.x + tw * 0.6, y: top.y))
+        trunk.addQuadCurve(to: CGPoint(x: g.cx + tw, y: g.ground), control: CGPoint(x: bend.x + tw, y: bend.y))
+        trunk.closeSubpath()
+        twoTone(&ctx, trunk, axis: g.cx - g.s * 0.01, light: trunkLight, dark: trunkDark)
+
+        // Anéis ao longo do tronco, seguindo a mesma curva.
+        var rings = Path()
+        for i in 1..<6 {
+            let t = CGFloat(i) / 6
+            let x = (1 - t) * (1 - t) * g.cx + 2 * (1 - t) * t * bend.x + t * t * top.x
+            let y = (1 - t) * (1 - t) * g.ground + 2 * (1 - t) * t * bend.y + t * t * top.y
+            rings.move(to: CGPoint(x: x - tw * 0.8, y: y))
+            rings.addLine(to: CGPoint(x: x + tw * 0.8, y: y + tw * 0.2))
+        }
+        ctx.stroke(rings, with: .color(trunkDark.mixed(with: .black, amount: 0.2)), lineWidth: max(0.6, g.s * 0.01))
+
+        let length = g.h * 0.46
+        let angles: [Double] = switch stage {
+        case .young: [.pi + 0.35, .pi - 0.45, -0.35, 0.45, -.pi / 2]
+        case .mature: [.pi + 0.45, .pi - 0.1, .pi - 0.7, -0.45, 0.1, 0.7]
+        default: [.pi + 0.5, .pi - 0.05, .pi - 0.7, -0.5, 0.05, 0.7, -.pi / 2]
+        }
+        for angle in angles {
+            let droop = sin(time * 1.2 + angle) * (animated ? 0.04 : 0)
+            let a = angle + droop
+            let center = CGPoint(x: top.x + cos(a) * length / 2, y: top.y + sin(a) * length / 2)
+            let leaf = ellipse(center, length, g.h * 0.11, angle: a)
+            if abs(cos(a)) < 0.2 {
+                twoTone(&ctx, leaf, axis: top.x, light: leafLight, dark: leafDark)
+            } else {
+                ctx.fill(leaf, with: .color(cos(a) < 0 ? leafLight : leafDark))
+            }
+        }
+
+        if stage >= .mature && health == .healthy {
+            for dx in [-0.035, 0.0, 0.035] {
+                ctx.fill(circle(CGPoint(x: top.x + g.s * dx, y: top.y + g.s * 0.04), g.s * 0.028),
+                         with: .color(Color(red: 0.45, green: 0.30, blue: 0.16)))
+            }
+        }
+    }
+
+    /// Baobá: tronco largo em forma de garrafa, galhos curtos e tufos achatados no alto.
+    private func drawBaobab(_ ctx: inout GraphicsContext, _ g: Geo) {
+        let w = g.s * (stage == .ancient ? 0.34 : (stage == .mature ? 0.28 : 0.22))
+        let trunkTop = g.ground - g.h * 0.68
+
+        var trunk = Path()
+        trunk.move(to: CGPoint(x: g.cx - w * 0.5, y: g.ground))
+        trunk.addQuadCurve(to: CGPoint(x: g.cx - w * 0.28, y: trunkTop), control: CGPoint(x: g.cx - w * 0.78, y: g.ground - g.h * 0.38))
+        trunk.addLine(to: CGPoint(x: g.cx + w * 0.28, y: trunkTop))
+        trunk.addQuadCurve(to: CGPoint(x: g.cx + w * 0.5, y: g.ground), control: CGPoint(x: g.cx + w * 0.78, y: g.ground - g.h * 0.38))
+        trunk.closeSubpath()
+        twoTone(&ctx, trunk, axis: g.cx, light: trunkLight, dark: trunkDark)
+
+        let tips: [CGPoint] = [
+            CGPoint(x: g.cx - w * 0.75, y: trunkTop - g.h * 0.14),
+            CGPoint(x: g.cx - w * 0.22, y: trunkTop - g.h * 0.24),
+            CGPoint(x: g.cx + w * 0.25, y: trunkTop - g.h * 0.22),
+            CGPoint(x: g.cx + w * 0.78, y: trunkTop - g.h * 0.12),
+        ]
+        var branches = Path()
+        for tip in tips {
+            branches.move(to: CGPoint(x: g.cx + (tip.x - g.cx) * 0.25, y: trunkTop + 2))
+            branches.addLine(to: tip)
+        }
+        ctx.stroke(branches, with: .color(trunkDark), style: StrokeStyle(lineWidth: max(1.2, g.s * 0.04), lineCap: .round))
+
+        guard health != .withered else { return }
+        for tip in tips {
+            twoTone(&ctx, ellipse(CGPoint(x: tip.x, y: tip.y - g.h * 0.02), g.h * 0.3, g.h * 0.11),
+                    axis: tip.x, light: leafLight, dark: leafDark)
         }
     }
 

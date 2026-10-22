@@ -2,7 +2,7 @@ import SwiftUI
 
 /// As nove espécies botânicas em que um hábito pode crescer.
 enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
-    case oak, pine, bonsai, cherry, willow, cactus, sequoia, bamboo, birch
+    case oak, pine, bonsai, cherry, willow, cactus, sequoia, bamboo, birch, ipe, palm, baobab
 
     var id: String { rawValue }
 
@@ -17,6 +17,9 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         case .sequoia: "Sequoia"
         case .bamboo: "Bambu"
         case .birch: "Bétula"
+        case .ipe: "Ipê-Amarelo"
+        case .palm: "Palmeira"
+        case .baobab: "Baobá"
         }
     }
 
@@ -28,6 +31,9 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         case .cherry: "camera.macro"
         case .cactus: "sun.max.fill"
         case .bamboo: "line.3.horizontal"
+        case .ipe: "sun.haze.fill"
+        case .palm: "beach.umbrella.fill"
+        case .baobab: "tree.fill"
         }
     }
 
@@ -43,6 +49,9 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         case .sequoia: "#2E5E3E"
         case .bamboo: "#79B33C"
         case .birch: "#B5C94C"
+        case .ipe: "#F2C318"
+        case .palm: "#3F9A4A"
+        case .baobab: "#6E9A3A"
         }
     }
 
@@ -57,6 +66,9 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         case .sequoia: Color(red: 0.18, green: 0.37, blue: 0.24)
         case .bamboo: Color(red: 0.47, green: 0.70, blue: 0.24)
         case .birch: Color(red: 0.71, green: 0.79, blue: 0.30)
+        case .ipe: Color(red: 0.97, green: 0.78, blue: 0.14)
+        case .palm: Color(red: 0.28, green: 0.62, blue: 0.30)
+        case .baobab: Color(red: 0.43, green: 0.60, blue: 0.24)
         }
     }
 
@@ -67,6 +79,8 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         case .cherry: Color(red: 0.36, green: 0.22, blue: 0.20)
         case .bamboo: Color(red: 0.55, green: 0.70, blue: 0.30)
         case .cactus: Color(red: 0.25, green: 0.50, blue: 0.33)
+        case .palm: Color(red: 0.62, green: 0.47, blue: 0.30)
+        case .baobab: Color(red: 0.62, green: 0.52, blue: 0.44)
         default: Color(red: 0.42, green: 0.29, blue: 0.19)
         }
     }
@@ -85,6 +99,7 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         case .bonsai: 0.72
         case .cactus: 0.85
         case .sequoia: 1.08
+        case .palm: 1.05
         default: 1
         }
     }

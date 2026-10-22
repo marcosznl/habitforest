@@ -48,13 +48,14 @@ struct ForestGridView: View {
         }
     }
 
-    /// Uma árvore saudável por dia regado nos últimos 60 dias, no estágio daquele dia.
+    /// Uma árvore por dia regado nos últimos 60 dias, no estágio daquele dia: os primeiros dias de
+    /// uma sequência aparecem como brotos e os seguintes cada vez maiores, até a ancestral.
     /// A ilha começa vazia e só cresce: dias não regados não deixam árvores secas.
     static func islandTrees(for habits: [Habit]) -> [IslandTree] {
         let entries = habits.flatMap { habit in
             habit.calculator().window(days: 60).compactMap { day -> (Date, IslandTree)? in
                 guard day.state == .completed else { return nil }
-                return (day.date, IslandTree(species: habit.species, stage: max(day.stage, .young), health: .healthy, tint: habit.themeColor))
+                return (day.date, IslandTree(species: habit.species, stage: day.stage, health: .healthy, tint: habit.themeColor))
             }
         }
         return entries.sorted { $0.0 < $1.0 }.map(\.1)
