@@ -38,7 +38,7 @@ struct ForestIslandView: View {
 
     /// Lado da grade: cresce com a floresta, entre 4×4 e 10×10.
     static func gridSide(for count: Int) -> Int {
-        min(10, max(4, Int(ceil(sqrt(Double(count) * 1.25)))))
+        min(10, max(4, Int(ceil(sqrt(Double(count) * 1.6)))))
     }
 
     private func canvas(time: Double) -> some View {
@@ -88,10 +88,10 @@ private struct IslandPainter {
 
     func draw(in ctx: inout GraphicsContext, size: CGSize) {
         let n = ForestIslandView.gridSide(for: trees.count)
-        let width = min(size.width * 0.94, size.height * 1.55)
+        let width = min(size.width * 0.94, size.height * 1.45)
         let tileW = width / CGFloat(n)
         let tileH = tileW / 2
-        let depth = width * 0.075
+        let depth = width * 0.12
         let cx = size.width / 2
         let topY = size.height - (CGFloat(n) * tileH + depth) - size.height * 0.03
         let colors = palette
@@ -102,29 +102,49 @@ private struct IslandPainter {
         let left = CGPoint(x: cx - width / 2, y: right.y)
         let down = CGSize(width: 0, height: depth)
 
-        // Laterais de terra.
-        ctx.fill(polygon([left, bottom, bottom + down, left + down]), with: .color(colors.dirtLeft))
-        ctx.fill(polygon([bottom, right, right + down, bottom + down]), with: .color(colors.dirtRight))
+        // Laterais de terra com degradê: mais clara junto à grama, escurecendo para baixo.
+        let leftFace = polygon([left, bottom, bottom + down, left + down])
+        let rightFace = polygon([bottom, right, right + down, bottom + down])
+        ctx.fill(leftFace, with: .linearGradient(Gradient(colors: [colors.dirtLeft, colors.dirtLeft.mixed(with: .black, amount: 0.22)]),
+                                                 startPoint: left, endPoint: left + down))
+        ctx.fill(rightFace, with: .linearGradient(Gradient(colors: [colors.dirtRight, colors.dirtRight.mixed(with: .black, amount: 0.25)]),
+                                                  startPoint: right, endPoint: right + down))
         drawPebbles(&ctx, left: left, bottom: bottom, right: right, depth: depth, colors: colors)
+        // Quina da frente com um filete de luz.
+        var edge = Path()
+        edge.move(to: bottom)
+        edge.addLine(to: bottom + down)
+        ctx.stroke(edge, with: .color(.white.opacity(0.12)), lineWidth: max(1, tileW * 0.03))
 
         // Franja de grama (ou neve) escorrendo pelas laterais.
-        let fringeDepth = depth * 0.38
-        ctx.fill(fringe(from: left, to: bottom, depth: fringeDepth, teeth: n * 2), with: .color(colors.fringe))
-        ctx.fill(fringe(from: bottom, to: right, depth: fringeDepth, teeth: n * 2),
-                 with: .color(colors.fringe.mixed(with: .black, amount: season == .winter ? 0.06 : 0.12)))
+        let fringeDepth = depth * 0.42
+        let rounded = season == .winter
+        ctx.fill(fringe(from: left, to: bottom, depth: fringeDepth, teeth: n * 3, rounded: rounded), with: .color(colors.fringe))
+        ctx.fill(fringe(from: bottom, to: right, depth: fringeDepth, teeth: n * 3, rounded: rounded),
+                 with: .color(colors.fringe.mixed(with: .black, amount: season == .winter ? 0.07 : 0.14)))
 
-        // Topo com xadrez sutil por lote.
-        ctx.fill(polygon([top, right, bottom, left]), with: .color(colors.top))
+        // Topo: degradê do fundo (iluminado) para a frente, com xadrez bem sutil por lote.
+        let topFace = polygon([top, right, bottom, left])
+        ctx.fill(topFace, with: .linearGradient(Gradient(colors: [colors.rim.mixed(with: colors.top, amount: 0.45), colors.top,
+                                                                 colors.top.mixed(with: colors.fringe, amount: 0.25)]),
+                                                startPoint: top, endPoint: bottom))
         for r in 0..<n {
             for c in 0..<n where (r + c).isMultiple(of: 2) {
-                ctx.fill(polygon(tileCorners(r: r, c: c, cx: cx, topY: topY, tileW: tileW, tileH: tileH)), with: .color(colors.topAlt))
+                ctx.fill(polygon(tileCorners(r: r, c: c, cx: cx, topY: topY, tileW: tileW, tileH: tileH)),
+                         with: .color(colors.topAlt.opacity(0.35)))
             }
         }
+        drawGrassTexture(&ctx, n: n, cx: cx, topY: topY, tileW: tileW, tileH: tileH, colors: colors)
         var rim = Path()
         rim.move(to: left)
         rim.addLine(to: top)
         rim.addLine(to: right)
-        ctx.stroke(rim, with: .color(colors.rim), lineWidth: max(1, tileW * 0.04))
+        ctx.stroke(rim, with: .color(colors.rim), lineWidth: max(1, tileW * 0.05))
+        var lip = Path()
+        lip.move(to: left)
+        lip.addLine(to: bottom)
+        lip.addLine(to: right)
+        ctx.stroke(lip, with: .color(colors.rim.opacity(0.6)), lineWidth: max(0.8, tileW * 0.03))
 
         // Árvores e enfeites, de trás para frente.
         let slots = Self.slotOrder(n: n)
@@ -168,6 +188,12 @@ private struct IslandPainter {
     }
 
     private func drawTree(_ ctx: inout GraphicsContext, _ tree: IslandTree, at center: CGPoint, tileW: CGFloat, seed: Int) {
+        // Covinha de terra fofa onde a árvore foi plantada.
+        let patch = CGRect(x: center.x - tileW * 0.3, y: center.y - tileW * 0.12, width: tileW * 0.6, height: tileW * 0.26)
+        ctx.fill(Path(ellipseIn: patch), with: .color(palette.fringe.opacity(season == .winter ? 0.0 : 0.35)))
+        if season == .winter {
+            ctx.fill(Path(ellipseIn: patch), with: .color(Color(red: 0.78, green: 0.84, blue: 0.94).opacity(0.5)))
+        }
         let side = tileW * 1.12
         var local = ctx
         local.translateBy(x: center.x - side / 2, y: center.y - side * 0.9 + tileW * 0.05)
@@ -208,18 +234,41 @@ private struct IslandPainter {
         }
     }
 
+    /// Pedras arredondadas encravadas na terra, como paralelepípedos irregulares.
     private func drawPebbles(_ ctx: inout GraphicsContext, left: CGPoint, bottom: CGPoint, right: CGPoint, depth: CGFloat, colors: Palette) {
-        for i in 0..<14 {
+        for i in 0..<40 {
             let onLeft = i.isMultiple(of: 2)
-            let t = CGFloat((i * 37) % 100) / 100
+            let t = (CGFloat((i * 37) % 100) + 2) / 104
             let start = onLeft ? left : bottom
             let end = onLeft ? bottom : right
             let x = start.x + (end.x - start.x) * t
-            let y = start.y + (end.y - start.y) * t + depth * (0.5 + CGFloat((i * 13) % 40) / 100)
-            let r = depth * 0.07
+            let y = start.y + (end.y - start.y) * t + depth * (0.45 + CGFloat((i * 29) % 45) / 100)
+            let r = depth * (0.09 + CGFloat((i * 17) % 7) / 100)
             let base = onLeft ? colors.dirtLeft : colors.dirtRight
-            ctx.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r * 0.6, width: r * 2, height: r * 1.2)),
-                     with: .color(base.mixed(with: .black, amount: 0.18)))
+            let stone = Path(ellipseIn: CGRect(x: x - r * 1.3, y: y - r * 0.7, width: r * 2.6, height: r * 1.4))
+            ctx.fill(stone, with: .color(base.mixed(with: .black, amount: 0.16)))
+            ctx.fill(Path(ellipseIn: CGRect(x: x - r * 1.1, y: y - r * 0.7, width: r * 2, height: r * 0.9)),
+                     with: .color(base.mixed(with: .white, amount: 0.08)))
+        }
+    }
+
+    /// Tufinhos de grama (ou brilhos de neve) espalhados pelo topo.
+    private func drawGrassTexture(_ ctx: inout GraphicsContext, n: Int, cx: CGFloat, topY: CGFloat, tileW: CGFloat, tileH: CGFloat, colors: Palette) {
+        let dark = colors.fringe.opacity(season == .winter ? 0.25 : 0.45)
+        let light = colors.rim.opacity(0.7)
+        for i in 0..<(n * n * 2) {
+            let u = CGFloat((i * 53) % 97) / 97, v = CGFloat((i * 71) % 89) / 89
+            let x = cx + (u - v) * CGFloat(n) * tileW / 2
+            let y = topY + (u + v) * CGFloat(n) * tileH / 2
+            let w = tileW * 0.05
+            var tuft = Path()
+            tuft.move(to: CGPoint(x: x - w, y: y))
+            tuft.addLine(to: CGPoint(x: x - w * 0.4, y: y - w * 1.3))
+            tuft.addLine(to: CGPoint(x: x, y: y - w * 0.2))
+            tuft.addLine(to: CGPoint(x: x + w * 0.5, y: y - w * 1.5))
+            tuft.addLine(to: CGPoint(x: x + w, y: y))
+            tuft.closeSubpath()
+            ctx.fill(tuft, with: .color(i.isMultiple(of: 3) ? light : dark))
         }
     }
 
@@ -232,17 +281,25 @@ private struct IslandPainter {
         return p
     }
 
-    /// Faixa serrilhada logo abaixo da aresta superior de uma lateral.
-    private func fringe(from a: CGPoint, to b: CGPoint, depth: CGFloat, teeth: Int) -> Path {
+    /// Faixa logo abaixo da aresta superior de uma lateral: pontas de grama irregulares ou ondas de neve.
+    private func fringe(from a: CGPoint, to b: CGPoint, depth: CGFloat, teeth: Int, rounded: Bool) -> Path {
         var p = Path()
         p.move(to: a)
         p.addLine(to: b)
-        p.addLine(to: CGPoint(x: b.x, y: b.y + depth * 0.6))
-        for k in stride(from: teeth * 2, through: 0, by: -1) {
-            let t = CGFloat(k) / CGFloat(teeth * 2)
-            let x = a.x + (b.x - a.x) * t
-            let y = a.y + (b.y - a.y) * t + (k.isMultiple(of: 2) ? depth : depth * 0.45)
-            p.addLine(to: CGPoint(x: x, y: y))
+        func point(_ t: CGFloat, _ drop: CGFloat) -> CGPoint {
+            CGPoint(x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t + drop)
+        }
+        p.addLine(to: point(1, depth * 0.5))
+        for k in stride(from: teeth, to: 0, by: -1) {
+            let t0 = CGFloat(k) / CGFloat(teeth), t1 = CGFloat(k - 1) / CGFloat(teeth)
+            let mid = (t0 + t1) / 2
+            let length = depth * (0.75 + CGFloat((k * 37) % 50) / 100)
+            if rounded {
+                p.addQuadCurve(to: point(t1, depth * 0.5), control: point(mid, length * 1.4))
+            } else {
+                p.addLine(to: point(mid + (t0 - t1) * 0.1, length))
+                p.addLine(to: point(t1, depth * 0.45))
+            }
         }
         p.closeSubpath()
         return p
