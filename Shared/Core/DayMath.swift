@@ -1,6 +1,11 @@
 import Foundation
 
 /// Utilitários de calendário. Todo dia de registro e de snapshot é normalizado para o início do dia local.
+extension Int {
+    /// "1 dia", "2 dias"…
+    var diasTexto: String { self == 1 ? "1 dia" : "\(self) dias" }
+}
+
 enum DayMath {
     static var calendar: Calendar { Calendar.current }
 

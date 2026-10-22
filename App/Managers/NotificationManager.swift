@@ -46,6 +46,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     /// Agenda lembretes avulsos para os próximos dias, pulando os dias já concluídos.
     /// Pedidos avulsos (em vez de um gatilho repetido) deixam um hábito concluído em silêncio hoje.
     func reschedule(for habits: [Habit]) {
+        guard !DemoMode.isActive else { return }
         let plans: [(id: String, content: UNMutableNotificationContent, date: DateComponents)] = habits
             .filter { $0.reminderEnabled && !$0.isPausedInGreenhouse }
             .flatMap { habit -> [(id: String, content: UNMutableNotificationContent, date: DateComponents)] in
@@ -79,7 +80,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         content.title = "Hora de regar: \(habit.name)"
         content.body = switch summary.health {
         case .healthy: summary.currentStreak > 0
-            ? "Seu \(habit.species.title.lowercased()) está há \(summary.currentStreak) dias crescendo. Não pare agora!"
+            ? "Sua árvore está há \(summary.currentStreak.diasTexto) crescendo. Não pare agora!"
             : "Plante hoje a primeira semente."
         case .struggling: "As folhas estão caindo… regue hoje para salvar a sequência."
         case .withered: "Sua árvore secou. Que tal plantar de novo hoje?"

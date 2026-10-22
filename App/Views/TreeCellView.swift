@@ -71,7 +71,7 @@ struct TreeCellView: View {
     private var tooltip: String {
         let date = day.date.formatted(.dateTime.weekday(.wide).day().month(.wide))
         let state: String = switch day.state {
-        case .completed: "Regada · \(day.stage.title) (\(day.streak) dias)"
+        case .completed: "Regada · \(day.stage.title) (\(day.streak.diasTexto))"
         case .missed: day.health == .withered ? "Não regada · árvore seca" : "Não regada · perdendo folhas"
         case .frozen: "Na Estufa"
         case .pending: "Pendente — clique para regar"

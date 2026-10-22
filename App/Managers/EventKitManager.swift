@@ -148,7 +148,7 @@ final class EventKitManager {
     private static let mastersKey = "remindersMasters"
     private static let aliasesKey = "remindersAliases"
 
-    private var syncEnabled: Bool { AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) && remindersAuthorized }
+    private var syncEnabled: Bool { !DemoMode.isActive && AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) && remindersAuthorized }
     @ObservationIgnored private var isSyncing = false
     @ObservationIgnored private var pendingSync: Task<Void, Never>?
     @ObservationIgnored private var changeObserver: NSObjectProtocol?

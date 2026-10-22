@@ -74,6 +74,7 @@
 		F3997C147674C0E161A0210A /* SceneBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C66F0DA247C27A14043824D /* SceneBackgroundView.swift */; };
 		F4975593D775F6D4AAD910CF /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1EB8677DC33E92C3C4C4C2 /* WidgetSnapshot.swift */; };
 		F629FA12110F84F72A70528A /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4A75200899E31492EAB810 /* Typography.swift */; };
+		F9065ABF8185704D8FA3447C /* DemoMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04080819E1555BAF5C7F43CF /* DemoMode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04080819E1555BAF5C7F43CF /* DemoMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoMode.swift; sourceTree = "<group>"; };
 		0588B66CE729810C74EB0FFB /* HabitForest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitForest.entitlements; sourceTree = "<group>"; };
 		073AA81E7FB88F26281295F4 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		0779E13B8273ADEE4E0CC87A /* PendingActionQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingActionQueue.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 		8763944623C3C9543E0D1BBF /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				04080819E1555BAF5C7F43CF /* DemoMode.swift */,
 				1ACD3E030D9BFF52F1CDAA5D /* HabitStore.swift */,
 			);
 			path = Store;
@@ -494,6 +497,7 @@
 				4FDE78CD9C5812FC223B46EF /* Color+Hex.swift in Sources */,
 				23E406D4FC032A3F6CB85704 /* DashboardView.swift in Sources */,
 				CC314A8F78A545DDE8FB31DE /* DayMath.swift in Sources */,
+				F9065ABF8185704D8FA3447C /* DemoMode.swift in Sources */,
 				94DBBE4CEABF3A538C68903E /* EventKitManager.swift in Sources */,
 				07F9D83DB426A9BD68BDF734 /* ExportService.swift in Sources */,
 				281607BBA3C195C980431BBA /* FocusFilterState.swift in Sources */,

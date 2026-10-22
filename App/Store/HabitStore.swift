@@ -167,6 +167,8 @@ final class HabitStore {
     // MARK: - Ações externas (widget, Atalhos, notificações)
 
     func drainPendingActions() {
+        // A fila é do banco real; a demonstração não pode consumi-la.
+        guard !DemoMode.isActive else { return }
         let actions = PendingActionQueue.drain()
         guard !actions.isEmpty else { return }
         for action in actions {
@@ -204,6 +206,7 @@ final class HabitStore {
 
     /// Grava a cópia leve que o widget e os App Intents leem.
     func publishSnapshot() {
+        guard !DemoMode.isActive else { return }
         let snapshot = WidgetSnapshot(
             generatedAt: .now,
             habits: habits.map { habit in
@@ -228,6 +231,11 @@ final class HabitStore {
 extension HabitStore {
     /// Planta uma pequena floresta na primeira abertura para o painel nunca começar vazio.
     func seedIfNeeded() {
+        if DemoMode.isActive {
+            DemoMode.seed(into: context)
+            reload()
+            return
+        }
         guard habits.isEmpty, !UserDefaults.standard.bool(forKey: "didSeed") else { return }
         UserDefaults.standard.set(true, forKey: "didSeed")
         addHabit(name: "Ler 20 páginas", species: .oak, colorHex: TreeSpecies.oak.defaultHex, targetMinutes: 0, context: .personal)

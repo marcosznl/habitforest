@@ -99,7 +99,7 @@ private struct PopoverHabitRow: View {
                     .frame(width: 34, height: 34)
                 VStack(alignment: .leading, spacing: 1) {
                     Text(habit.name).lineLimit(1)
-                    Text("\(summary.currentStreak) dias · \(summary.stage.title)")
+                    Text("\(summary.currentStreak.diasTexto) · \(summary.stage.title)")
                         .font(.inter(.caption)).foregroundStyle(.secondary)
                 }
                 Spacer()

@@ -115,29 +115,29 @@ struct HeatmapView: View {
     private func heatmap(_ cells: [HeatCell]) -> some View {
         let symbols = Calendar.current.veryShortWeekdaySymbols
         let firstWeekday = Calendar.current.firstWeekday
+        let weeks = (cells.map(\.week).max() ?? 52) + 1
+        // Cada dia ocupa um quadrado [semana, semana+1] × [dia, dia+1], com uma pequena folga.
         return Chart(cells) { cell in
             RectangleMark(
-                x: .value("Semana", cell.week),
-                y: .value("Dia", cell.weekday),
-                width: .ratio(0.85),
-                height: .ratio(0.85)
+                xStart: .value("Semana", Double(cell.week) + 0.1),
+                xEnd: .value("Semana", Double(cell.week) + 0.9),
+                yStart: .value("Dia", Double(cell.weekday) + 0.1),
+                yEnd: .value("Dia", Double(cell.weekday) + 0.9)
             )
-            .foregroundStyle(by: .value("Conclusão", cell.ratio))
+            .foregroundStyle(Self.heatColor(cell.ratio))
             .cornerRadius(2)
         }
-        .chartForegroundStyleScale(range: Gradient(colors: [
-            Color.primary.opacity(0.06), Color(red: 0.6, green: 0.85, blue: 0.5), Color(red: 0.13, green: 0.5, blue: 0.2),
-        ]))
+        .chartXScale(domain: 0...Double(weeks))
         .chartYScale(domain: .automatic(includesZero: true, reversed: true))
         .chartYAxis {
-            AxisMarks(values: [0, 2, 4, 6]) { value in
+            AxisMarks(values: [0.5, 2.5, 4.5, 6.5]) { value in
                 AxisValueLabel {
-                    if let row = value.as(Int.self) { Text(symbols[(row + firstWeekday - 1) % 7]) }
+                    if let row = value.as(Double.self) { Text(symbols[(Int(row) + firstWeekday - 1) % 7]) }
                 }
             }
         }
         .chartXAxis {
-            AxisMarks(values: .stride(by: 4.33)) { value in
+            AxisMarks(values: .stride(by: 4.35)) { value in
                 AxisValueLabel {
                     if let week = value.as(Double.self), let cell = cells.first(where: { $0.week == Int(week) }) {
                         Text(cell.date.formatted(.dateTime.month(.abbreviated)))
@@ -145,8 +145,13 @@ struct HeatmapView: View {
                 }
             }
         }
-        .chartLegend(.hidden)
         .frame(height: 150)
+    }
+
+    /// Verde mais forte conforme mais hábitos foram regados no dia.
+    private static func heatColor(_ ratio: Double) -> Color {
+        guard ratio > 0 else { return Color.primary.opacity(0.07) }
+        return Color(red: 0.62, green: 0.86, blue: 0.45).mixed(with: Color(red: 0.10, green: 0.45, blue: 0.18), amount: ratio)
     }
 
     private func weekdayChart(_ rates: [WeekdayRate]) -> some View {

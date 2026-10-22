@@ -6,7 +6,7 @@ import SwiftData
 /// se o iCloud Drive não estiver disponível, usa o Application Support.
 @MainActor
 final class PersistenceController {
-    static let shared = PersistenceController()
+    static let shared = PersistenceController(inMemory: DemoMode.isActive)
 
     enum Location: Equatable {
         case iCloudDrive

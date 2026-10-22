@@ -51,10 +51,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Links `habitforest://` vindos do widget e dos eventos do Calendário.
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls where url.scheme == "habitforest" {
+            if url.host() == "barra" {
+                StatusItemController.shared.showPopover()
+                continue
+            }
             let section: DashboardSection = switch url.host() {
-            case "focus": .focus
-            case "stats": .stats
-            case "forest": .forest
+            case "focus", "foco": .focus
+            case "stats", "estatisticas": .stats
+            case "forest", "floresta": .forest
+            case "estufa": .greenhouse
             default: .habits
             }
             MainWindowController.shared.show(section: section)

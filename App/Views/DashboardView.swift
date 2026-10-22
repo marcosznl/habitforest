@@ -273,10 +273,10 @@ struct GreenhouseView: View {
                                 VStack(alignment: .leading) {
                                     Text(habit.name).font(.rubik(.headline, weight: .semibold))
                                     if let since = habit.greenhouseSince, habit.isPausedInGreenhouse {
-                                        Text("Na estufa desde \(since.formatted(date: .abbreviated, time: .omitted)) · sequência de \(summary.currentStreak) dias preservada")
+                                        Text("Na estufa desde \(since.formatted(date: .abbreviated, time: .omitted)) · sequência de \(summary.currentStreak.diasTexto) preservada")
                                             .font(.inter(.caption)).foregroundStyle(.secondary)
                                     } else {
-                                        Text("\(summary.currentStreak) dias · \(summary.stage.title)").font(.inter(.caption)).foregroundStyle(.secondary)
+                                        Text("\(summary.currentStreak.diasTexto) · \(summary.stage.title)").font(.inter(.caption)).foregroundStyle(.secondary)
                                     }
                                 }
                                 Spacer()
