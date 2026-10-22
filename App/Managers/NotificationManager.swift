@@ -1,7 +1,7 @@
 import Foundation
 import UserNotifications
 
-/// Daily reminders with actionable buttons ("Regar Árvore", "Adiar 15 min") right on the banner.
+/// Lembretes diários com botões de ação ("Regar Árvore", "Adiar 15 min") direto no banner.
 @MainActor
 final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
@@ -41,10 +41,10 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         isAuthorized = settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional
     }
 
-    // MARK: - Scheduling
+    // MARK: - Agendamento
 
-    /// Schedules one-shot reminders for the coming days, skipping days already completed.
-    /// One-shot requests (instead of a repeating trigger) let a finished habit stay quiet today.
+    /// Agenda lembretes avulsos para os próximos dias, pulando os dias já concluídos.
+    /// Pedidos avulsos (em vez de um gatilho repetido) deixam um hábito concluído em silêncio hoje.
     func reschedule(for habits: [Habit]) {
         let plans: [(id: String, content: UNMutableNotificationContent, date: DateComponents)] = habits
             .filter { $0.reminderEnabled && !$0.isPausedInGreenhouse }

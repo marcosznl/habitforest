@@ -9,15 +9,15 @@ final class Habit {
     var treeType: String = TreeSpecies.oak.rawValue
     var themeColorHex: String = TreeSpecies.oak.defaultHex
     var createdAt: Date = Date.now
-    /// Daily focus goal in minutes (0 = simple check-off habit).
+    /// Meta diária de foco em minutos (0 = hábito de apenas marcar).
     var targetMinutes: Int = 0
     @Relationship(deleteRule: .cascade, inverse: \HabitLog.habit)
     var logs: [HabitLog] = []
-    /// Greenhouse mode: paused for vacations without breaking the streak.
+    /// Modo Estufa: pausado nas férias sem quebrar a sequência.
     var isPausedInGreenhouse: Bool = false
     var greenhouseSince: Date?
     var sortOrder: Int = 0
-    /// Which Focus Filter context shows this habit (`HabitContext`).
+    /// Em qual contexto do Filtro de Foco este hábito aparece (`HabitContext`).
     var contextRaw: String = HabitContext.any.rawValue
     var reminderEnabled: Bool = false
     var reminderHour: Int = 9
@@ -62,7 +62,7 @@ extension Habit {
         log(on: day)?.isCompleted ?? false
     }
 
-    /// Days covered by Greenhouse mode: past frozen logs plus the ongoing pause.
+    /// Dias cobertos pela Estufa: registros congelados no passado mais a pausa em andamento.
     var frozenDays: Set<Date> {
         var days = Set(logs.filter { $0.isFrozen && !$0.isCompleted }.map(\.date))
         if isPausedInGreenhouse, let since = greenhouseSince {

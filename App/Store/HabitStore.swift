@@ -3,8 +3,8 @@ import Observation
 import SwiftData
 import SwiftUI
 
-/// Single source of truth for habits. Every mutation goes through here so feedback (sound,
-/// haptics), notifications, Reminders sync and the widget snapshot stay consistent.
+/// Fonte única de verdade dos hábitos. Toda alteração passa por aqui para que o retorno (som,
+/// tátil), as notificações, o Lembretes e o snapshot do widget fiquem consistentes.
 @MainActor
 @Observable
 final class HabitStore {
@@ -12,9 +12,9 @@ final class HabitStore {
 
     let context: ModelContext
     private(set) var habits: [Habit] = []
-    /// Bumped on every mutation; views that derive heavy data can key off it.
+    /// Incrementado a cada alteração; views com cálculos pesados podem se basear nele.
     private(set) var revision = 0
-    /// Set by the Focus Filter; `nil` means show everything.
+    /// Definido pelo Filtro de Foco; `nil` mostra tudo.
     private(set) var focusContext: HabitContext?
     private(set) var focusMutesReminders = false
 
@@ -37,7 +37,7 @@ final class HabitStore {
         })
     }
 
-    // MARK: - Queries
+    // MARK: - Consultas
 
     func reload() {
         let descriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.sortOrder), SortDescriptor(\.createdAt)])
@@ -45,7 +45,7 @@ final class HabitStore {
         revision += 1
     }
 
-    /// Habits visible under the current macOS Focus.
+    /// Hábitos visíveis no Foco atual do macOS.
     var visibleHabits: [Habit] {
         guard let focusContext, focusContext != .any else { return habits }
         return habits.filter { $0.context == focusContext || $0.context == .any }
@@ -59,7 +59,7 @@ final class HabitStore {
 
     var completedTodayCount: Int { activeHabits.filter { $0.isCompleted(on: .now) }.count }
 
-    // MARK: - Habit CRUD
+    // MARK: - Criar, editar e excluir
 
     @discardableResult
     func addHabit(name: String, species: TreeSpecies, colorHex: String, targetMinutes: Int, context habitContext: HabitContext) -> Habit {
@@ -86,14 +86,14 @@ final class HabitStore {
         Haptics.perform(.alignment)
     }
 
-    /// Persist edits made directly to a habit's properties (editor sheet).
+    /// Salva edições feitas direto nas propriedades do hábito (folha de edição).
     func habitDidChange() {
         commit()
     }
 
-    // MARK: - Daily tracking
+    // MARK: - Registro diário
 
-    /// Toggles the given day. Returns the new completion state.
+    /// Alterna o dia informado. Devolve o novo estado de conclusão.
     @discardableResult
     func toggle(_ habit: Habit, on day: Date = .now) -> Bool {
         let newValue = !habit.isCompleted(on: day)
@@ -103,10 +103,7 @@ final class HabitStore {
 
     func setCompleted(_ habit: Habit, on day: Date = .now, completed: Bool, feedback: Bool = true) {
         let day = DayMath.start(of: day)
-        guard day <= DayMath.today(), day >= DayMath.start(of: habit.createdAt) || completed else { return }
-        if completed, day < DayMath.start(of: habit.createdAt) {
-            habit.createdAt = day
-        }
+        guard day <= DayMath.today() else { return }
         let log = logForEditing(habit, on: day)
         guard log.isCompleted != completed else { return }
         log.isCompleted = completed
@@ -131,7 +128,7 @@ final class HabitStore {
         commit()
     }
 
-    /// Adds focus minutes from a Pomodoro session; reaching the target completes the habit.
+    /// Soma minutos de foco de uma sessão Pomodoro; atingir a meta conclui o hábito.
     func addFocusMinutes(_ minutes: Int, to habit: Habit, on day: Date = .now) {
         guard minutes > 0 else { return }
         let log = logForEditing(habit, on: day)
@@ -142,14 +139,14 @@ final class HabitStore {
         }
     }
 
-    // MARK: - Greenhouse
+    // MARK: - Estufa
 
     func setGreenhouse(_ habit: Habit, paused: Bool) {
         guard habit.isPausedInGreenhouse != paused else { return }
         if paused {
             habit.greenhouseSince = DayMath.today()
         } else if let since = habit.greenhouseSince {
-            // Persist the paused days so the streak keeps ignoring them after leaving the greenhouse.
+            // Grava os dias pausados para a sequência continuar ignorando-os depois de sair da estufa.
             var day = DayMath.start(of: since)
             let today = DayMath.today()
             while day < today {
@@ -165,7 +162,7 @@ final class HabitStore {
         AudioManager.shared.play(.leafRustle)
     }
 
-    // MARK: - External actions (widget, Shortcuts, notifications)
+    // MARK: - Ações externas (widget, Atalhos, notificações)
 
     func drainPendingActions() {
         let actions = PendingActionQueue.drain()
@@ -177,7 +174,7 @@ final class HabitStore {
         publishSnapshot()
     }
 
-    // MARK: - Focus Filter
+    // MARK: - Filtro de Foco
 
     func applyFocusFilterFromDefaults() {
         let state = FocusFilterState.current
@@ -185,7 +182,7 @@ final class HabitStore {
         focusMutesReminders = state.muteReminders
     }
 
-    // MARK: - Internals
+    // MARK: - Interno
 
     private func logForEditing(_ habit: Habit, on day: Date) -> HabitLog {
         if let existing = habit.log(on: day) { return existing }
@@ -203,7 +200,7 @@ final class HabitStore {
         NotificationManager.shared.reschedule(for: habits)
     }
 
-    /// Writes the lightweight copy the widget and App Intents read.
+    /// Grava a cópia leve que o widget e os App Intents leem.
     func publishSnapshot() {
         let snapshot = WidgetSnapshot(
             generatedAt: .now,
@@ -227,7 +224,7 @@ final class HabitStore {
 }
 
 extension HabitStore {
-    /// Seeds a small forest on first launch so the dashboard is never empty.
+    /// Planta uma pequena floresta na primeira abertura para o painel nunca começar vazio.
     func seedIfNeeded() {
         guard habits.isEmpty, !UserDefaults.standard.bool(forKey: "didSeed") else { return }
         UserDefaults.standard.set(true, forKey: "didSeed")

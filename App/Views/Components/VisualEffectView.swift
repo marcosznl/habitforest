@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// Native NSVisualEffectView for window-level vibrancy (sidebar, HUD, popover materials).
+/// NSVisualEffectView nativo para a translucidez da janela (materiais de barra lateral, HUD, popover).
 struct VisualEffectView: NSViewRepresentable {
     var material: NSVisualEffectView.Material = .sidebar
     var blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
@@ -23,7 +23,7 @@ struct VisualEffectView: NSViewRepresentable {
     }
 }
 
-/// Glass card used across the dashboard.
+/// Cartão de vidro usado em todo o painel.
 struct GlassCard<Content: View>: View {
     var padding: CGFloat = 14
     @ViewBuilder var content: Content
@@ -36,7 +36,7 @@ struct GlassCard<Content: View>: View {
     }
 }
 
-/// Captures the backing NSView so AppKit pickers (NSSharingServicePicker) can anchor to it.
+/// Captura a NSView de apoio para ancorar seletores do AppKit (NSSharingServicePicker).
 struct ViewAnchor: NSViewRepresentable {
     let onResolve: (NSView) -> Void
 
@@ -54,7 +54,7 @@ struct HealthBadge: View {
 
     var body: some View {
         Label(health.title, systemImage: health.symbolName)
-            .font(.caption2.weight(.semibold))
+            .font(.inter(.caption2, weight: .semibold))
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .background(color.opacity(0.18), in: Capsule())

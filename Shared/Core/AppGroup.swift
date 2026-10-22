@@ -1,9 +1,9 @@
 import Foundation
 
-/// Shared container used by the app and the widget extension.
+/// Contêiner compartilhado entre o app e a extensão do widget.
 ///
-/// The identifier comes from Info.plist (`HFAppGroupIdentifier`), which expands
-/// `$(TeamIdentifierPrefix)` at build time so it always matches the entitlement.
+/// O identificador vem do Info.plist (`HFAppGroupIdentifier`), que expande
+/// `$(TeamIdentifierPrefix)` na compilação e por isso sempre bate com o entitlement.
 enum AppGroup {
     static let identifier: String = {
         let fromPlist = Bundle.main.object(forInfoDictionaryKey: "HFAppGroupIdentifier") as? String

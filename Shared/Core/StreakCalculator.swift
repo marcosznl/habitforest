@@ -1,6 +1,6 @@
 import Foundation
 
-/// A day with the tree state as it was at the end of that day.
+/// Um dia com o estado da árvore como estava no fim dele.
 struct DaySnapshot: Hashable, Codable, Sendable {
     var date: Date
     var state: DayState
@@ -10,25 +10,29 @@ struct DaySnapshot: Hashable, Codable, Sendable {
     var stage: GrowthStage { GrowthStage(streak: streak) }
 }
 
-/// Pure streak/health engine shared by the app and the widget.
+/// Motor puro de sequência e saúde, compartilhado pelo app e pelo widget.
 ///
-/// Rules:
-/// - Completed days grow the streak.
-/// - Greenhouse (frozen) days are neutral: they never count and never break.
-/// - A single missed day is a grace day: the tree turns `.struggling` but the streak survives
-///   if the next day is completed.
-/// - Two consecutive missed days wither the tree and reset the streak to zero.
-/// - Today is `pending` until done and never counts as a miss.
+/// Regras:
+/// - Dias concluídos aumentam a sequência.
+/// - Dias na Estufa (congelados) são neutros: não contam nem quebram.
+/// - Um único dia falhado é de tolerância: a árvore fica `.struggling`, mas a sequência sobrevive
+///   se o dia seguinte for concluído.
+/// - Dois dias falhados seguidos secam a árvore e zeram a sequência.
+/// - Hoje fica `pending` até ser feito e nunca conta como falha.
+/// - Dias anteriores ao plantio são neutros; um dia antigo marcado depois conta só como ele mesmo.
 struct StreakCalculator: Sendable {
+    /// Dia do plantio do hábito.
     let start: Date
+    /// Primeiro dia da linha do tempo: o plantio ou um dia antigo marcado depois, o que vier antes.
+    let firstDay: Date
     let completed: Set<Date>
     let frozen: Set<Date>
     let today: Date
 
     init(start: Date, completed: Set<Date>, frozen: Set<Date>, today: Date = DayMath.today()) {
         let normalizedCompleted = Set(completed.map(DayMath.start(of:)))
-        let earliestLog = normalizedCompleted.min() ?? DayMath.start(of: start)
-        self.start = min(DayMath.start(of: start), earliestLog)
+        self.start = DayMath.start(of: start)
+        self.firstDay = min(self.start, normalizedCompleted.min() ?? self.start)
         self.completed = normalizedCompleted
         self.frozen = Set(frozen.map(DayMath.start(of:)))
         self.today = DayMath.start(of: today)
@@ -36,23 +40,23 @@ struct StreakCalculator: Sendable {
 
     func state(on day: Date) -> DayState {
         let day = DayMath.start(of: day)
-        if day < start { return .beforeStart }
         if completed.contains(day) { return .completed }
+        if day < start { return .beforeStart }
         if frozen.contains(day) { return .frozen }
         if day >= today { return .pending }
         return .missed
     }
 
-    /// Every day from the habit start through `end`, oldest first.
+    /// Todos os dias do início do hábito até `end`, do mais antigo ao mais novo.
     func timeline(through end: Date? = nil) -> [DaySnapshot] {
         let end = DayMath.start(of: end ?? today)
-        guard end >= start else { return [] }
+        guard end >= firstDay else { return [] }
 
         var result: [DaySnapshot] = []
-        result.reserveCapacity(DayMath.distance(from: start, to: end) + 1)
+        result.reserveCapacity(DayMath.distance(from: firstDay, to: end) + 1)
         var streak = 0
         var consecutiveMisses = 0
-        var day = start
+        var day = firstDay
 
         while day <= end {
             let state = state(on: day)
@@ -63,7 +67,10 @@ struct StreakCalculator: Sendable {
             case .missed:
                 consecutiveMisses += 1
                 if consecutiveMisses >= 2 { streak = 0 }
-            case .frozen, .pending, .beforeStart:
+            case .beforeStart:
+                streak = 0
+                consecutiveMisses = 0
+            case .frozen, .pending:
                 break
             }
             let health: TreeHealth = switch consecutiveMisses {
@@ -77,7 +84,7 @@ struct StreakCalculator: Sendable {
         return result
     }
 
-    /// Last `count` days ending today, padding days before the habit started.
+    /// Últimos `count` dias até hoje, completando os dias anteriores ao plantio.
     func window(days count: Int) -> [DaySnapshot] {
         let full = timeline()
         let byDate = Dictionary(full.map { ($0.date, $0) }, uniquingKeysWith: { a, _ in a })

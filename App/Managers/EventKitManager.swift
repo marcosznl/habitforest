@@ -2,7 +2,7 @@ import AppKit
 import EventKit
 import Observation
 
-/// Calendar time blocks for focus sessions and two-way habit sync with Reminders.
+/// Blocos de tempo no Calendário para sessões de foco e sincronização dos hábitos com o Lembretes nos dois sentidos.
 @MainActor
 @Observable
 final class EventKitManager {
@@ -43,7 +43,7 @@ final class EventKitManager {
         }
     }
 
-    // MARK: - Calendar
+    // MARK: - Calendário
 
     func loadTodaysEvents() {
         guard calendarAuthorized else { todaysEvents = []; return }
@@ -54,7 +54,7 @@ final class EventKitManager {
             .sorted { $0.startDate < $1.startDate }
     }
 
-    /// Writes a finished (or planned) focus session as a time block in the HabitForest calendar.
+    /// Grava uma sessão de foco concluída (ou planejada) como bloco de tempo no calendário HabitForest.
     @discardableResult
     func addFocusBlock(title: String, start: Date, minutes: Int, notes: String? = nil) -> Bool {
         guard calendarAuthorized, let calendar = habitCalendar() else { return false }
@@ -94,7 +94,7 @@ final class EventKitManager {
         }
     }
 
-    // MARK: - Reminders sync
+    // MARK: - Sincronização com o Lembretes
 
     private var syncEnabled: Bool { AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) && remindersAuthorized }
 
@@ -127,8 +127,8 @@ final class EventKitManager {
         }
     }
 
-    /// Ensures today's reminder exists for each active habit and reconciles completion both ways:
-    /// a reminder ticked in Reminders waters the tree, and a tree watered here ticks the reminder.
+    /// Garante o lembrete de hoje para cada hábito ativo e concilia a conclusão nos dois sentidos:
+    /// marcar o lembrete no Lembretes rega a árvore, e regar a árvore aqui marca o lembrete.
     func syncReminders(store habitStore: HabitStore) async {
         guard syncEnabled, let list = remindersList() else { return }
         let today = DayMath.today()
@@ -163,7 +163,7 @@ final class EventKitManager {
         try? store.commit()
     }
 
-    /// Mirrors a single toggle made in the app to its reminder, if sync is on.
+    /// Espelha no lembrete uma marcação feita no app, se a sincronização estiver ligada.
     func reflectCompletion(of habit: Habit, on day: Date, completed: Bool) async {
         guard syncEnabled, let list = remindersList(), let url = marker(for: habit, on: day) else { return }
         guard let reminder = await reminders(in: list).first(where: { $0.url == url }),

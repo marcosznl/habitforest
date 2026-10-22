@@ -16,27 +16,35 @@
 		1407C649BC6555AD27D73FBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8FB54F164F49EB58BA59E05 /* AppDelegate.swift */; };
 		19E388B1DC10F8C5BAF31DBB /* HabitForestWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0C5BF53C611F6AE2E53CE5F5 /* HabitForestWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1B4CBB156DE529F304B5579C /* FocusTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23AD399F6A52C16064C472C /* FocusTimerView.swift */; };
+		1E313A5010284F8D048C8F64 /* ForestIslandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC131D986AAB240763F9847 /* ForestIslandView.swift */; };
 		23E406D4FC032A3F6CB85704 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3366EAB160990FB9FCFC3CE7 /* DashboardView.swift */; };
 		281607BBA3C195C980431BBA /* FocusFilterState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CADD520917A4D7BEAD754BD /* FocusFilterState.swift */; };
+		31411DB0D9F3833F675DF7E9 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D4C02399471F44B0F2C0DEA0 /* Inter.ttf */; };
 		32CC38F2FE16615BE39E669D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781DB92CA2B70BEB92F7AA5F /* NotificationManager.swift */; };
 		3F2456094A69D09396CF03EE /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CBA54DD0A619881769920E /* VisualEffectView.swift */; };
+		3F8189A15B56B2AAC78366CD /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44A2ACF15D90B0CDBFC4C909 /* OFL-Inter.txt */; };
+		427E9D9A0CBA026D6A935657 /* ForestIslandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC131D986AAB240763F9847 /* ForestIslandView.swift */; };
 		4C91B291A0563551D00946D7 /* HabitContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD676D024083B6D348E4B5 /* HabitContext.swift */; };
 		4FDE78CD9C5812FC223B46EF /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2235CFE8CC8175770899CF /* Color+Hex.swift */; };
 		53AC6B8BC9234B466C24ABC5 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95810338A95D09CE8AF200E6 /* AppGroup.swift */; };
 		5EA72401DC9376813A1EEFC9 /* ForestGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FCDC716316EC908044C29C /* ForestGridView.swift */; };
 		6819DD629D1C4BF91FD429A9 /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712E58FD14F37FACC5713A84 /* HeatmapView.swift */; };
+		68A40F6E36133F3A672F9126 /* Rubik.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE634E53660A2303376C5C59 /* Rubik.ttf */; };
 		6974F629550F46D92E128F0B /* SceneBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C66F0DA247C27A14043824D /* SceneBackgroundView.swift */; };
 		6A7F773DF9A3FB768BA9A9CF /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43C80AC6385959A1B026F79 /* AudioManager.swift */; };
 		7213FD50095E550EC6D22392 /* FocusSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFD4089543F968A28FA836E /* FocusSession.swift */; };
+		7805223DF407DCE18177512D /* OFL-Rubik.txt in Resources */ = {isa = PBXBuildFile; fileRef = D9E9F92BBA26A75787543571 /* OFL-Rubik.txt */; };
 		84C47845863493A3606C2718 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073AA81E7FB88F26281295F4 /* PersistenceController.swift */; };
 		874A9C1A3E774135F3F1580C /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35332F601E3EF640DFBB85A2 /* Haptics.swift */; };
 		87595BC335FA9C19599BFAED /* ToggleHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1641F24E6EDE48AED7FEAF /* ToggleHabitIntent.swift */; };
+		8FA937D6E18663521EA956F7 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4A75200899E31492EAB810 /* Typography.swift */; };
 		91B2A60817321D2D0D7BB478 /* HabitForestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AB753021970D873A684210 /* HabitForestApp.swift */; };
 		94DBBE4CEABF3A538C68903E /* EventKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292BAD04B98F29F44A951AF9 /* EventKitManager.swift */; };
 		95119E0F4DE6227C7623E2E3 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1EB8677DC33E92C3C4C4C2 /* WidgetSnapshot.swift */; };
 		9AE5DC0ED41B7302A649E2E1 /* PendingActionQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0779E13B8273ADEE4E0CC87A /* PendingActionQueue.swift */; };
 		9DFF8B337401C8B947592CEF /* TreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7DCDC105ADDA9DC06FEE6A /* TreeView.swift */; };
 		9F705549935DB4510966A2A9 /* PendingActionQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0779E13B8273ADEE4E0CC87A /* PendingActionQueue.swift */; };
+		A0CFC3AA36B5A7AB1EE4666D /* HabitMatrixRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0FBC6BEB5507E8823747DE /* HabitMatrixRow.swift */; };
 		A196A383D10A37EE6A42D07A /* TreeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8A3103BE70B19B36E63E1A /* TreeState.swift */; };
 		A1E2DEB74B9D11309AAF9E4F /* HabitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961C8BBCF658EF0781B48C3B /* HabitWidget.swift */; };
 		A4AC050EFFAEAB31D463290A /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE5F3B5F837E57F28E9D55 /* MenuBarPopoverView.swift */; };
@@ -51,17 +59,21 @@
 		C3DDA597726DFE028C47E740 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BBA73EBF81F7F19ECC1A5D /* Habit.swift */; };
 		C3F353C833599A70F6E38E86 /* TreeCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBDE987A74D692C11C717608 /* TreeCellView.swift */; };
 		C664C6B3AF81BA07EA74B628 /* DayMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBC15BEADA4D40E4FB7CAA1 /* DayMath.swift */; };
-		C91AAB17F1BC05F537041448 /* EverydayHabitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057A8CC3693CF9E2430DF6F1 /* EverydayHabitRow.swift */; };
 		CA01183629C18FD50FA757A5 /* HabitEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1340555CDCF4C3B54A44BF /* HabitEditorView.swift */; };
 		CC314A8F78A545DDE8FB31DE /* DayMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBC15BEADA4D40E4FB7CAA1 /* DayMath.swift */; };
 		CE8563F72583EC129EE0999B /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2235CFE8CC8175770899CF /* Color+Hex.swift */; };
+		D06319DF0A528E16B221C4CD /* Rubik.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE634E53660A2303376C5C59 /* Rubik.ttf */; };
+		DC84B785BC7AFD98FDCC7777 /* OFL-Rubik.txt in Resources */ = {isa = PBXBuildFile; fileRef = D9E9F92BBA26A75787543571 /* OFL-Rubik.txt */; };
 		E0018150FE5EAD158A8FED5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B5393FDFB4F721BC6FCB366 /* Assets.xcassets */; };
 		E2252831D4BB8AB66455AEBF /* ToggleHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1641F24E6EDE48AED7FEAF /* ToggleHabitIntent.swift */; };
+		E4AE52541A07F684C9E82E91 /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44A2ACF15D90B0CDBFC4C909 /* OFL-Inter.txt */; };
 		E5E630C1FDD3FEF8D1F700CC /* TreeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8A3103BE70B19B36E63E1A /* TreeState.swift */; };
+		EE5DD3419D98C22D5698D73B /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D4C02399471F44B0F2C0DEA0 /* Inter.ttf */; };
 		F2AA21A1E65264CAB04E2493 /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74066E7F5E4259A8F9DFEA44 /* StatusItemController.swift */; };
 		F385BAB953E691BDD4C8E9C8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D4BFE5F0CD36DB8996685E /* SettingsView.swift */; };
 		F3997C147674C0E161A0210A /* SceneBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C66F0DA247C27A14043824D /* SceneBackgroundView.swift */; };
 		F4975593D775F6D4AAD910CF /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1EB8677DC33E92C3C4C4C2 /* WidgetSnapshot.swift */; };
+		F629FA12110F84F72A70528A /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4A75200899E31492EAB810 /* Typography.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,7 +101,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		057A8CC3693CF9E2430DF6F1 /* EverydayHabitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EverydayHabitRow.swift; sourceTree = "<group>"; };
 		0588B66CE729810C74EB0FFB /* HabitForest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitForest.entitlements; sourceTree = "<group>"; };
 		073AA81E7FB88F26281295F4 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		0779E13B8273ADEE4E0CC87A /* PendingActionQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingActionQueue.swift; sourceTree = "<group>"; };
@@ -101,6 +112,7 @@
 		275F4037449C5ACC25045A33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		292BAD04B98F29F44A951AF9 /* EventKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventKitManager.swift; sourceTree = "<group>"; };
 		299BB8C9D3206605CA6DEF00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2D0FBC6BEB5507E8823747DE /* HabitMatrixRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitMatrixRow.swift; sourceTree = "<group>"; };
 		2D1340555CDCF4C3B54A44BF /* HabitEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitEditorView.swift; sourceTree = "<group>"; };
 		2FFD4089543F968A28FA836E /* FocusSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSession.swift; sourceTree = "<group>"; };
 		3366EAB160990FB9FCFC3CE7 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -108,8 +120,10 @@
 		35E586102E31F931B8D8CB22 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		3A2E3CEF9F5C6F63F7EABB77 /* AppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntents.swift; sourceTree = "<group>"; };
 		3AB535DD4321DEF633282033 /* HabitForestWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HabitForestWidget.entitlements; sourceTree = "<group>"; };
+		44A2ACF15D90B0CDBFC4C909 /* OFL-Inter.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Inter.txt"; sourceTree = "<group>"; };
 		49DE5F3B5F837E57F28E9D55 /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
 		4B5393FDFB4F721BC6FCB366 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4EC131D986AAB240763F9847 /* ForestIslandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForestIslandView.swift; sourceTree = "<group>"; };
 		64BBA73EBF81F7F19ECC1A5D /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
 		712E58FD14F37FACC5713A84 /* HeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapView.swift; sourceTree = "<group>"; };
 		74066E7F5E4259A8F9DFEA44 /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
@@ -118,6 +132,7 @@
 		8A1EB8677DC33E92C3C4C4C2 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshot.swift; sourceTree = "<group>"; };
 		8C66F0DA247C27A14043824D /* SceneBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBackgroundView.swift; sourceTree = "<group>"; };
 		8CADD520917A4D7BEAD754BD /* FocusFilterState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusFilterState.swift; sourceTree = "<group>"; };
+		8D4A75200899E31492EAB810 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		95810338A95D09CE8AF200E6 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		961C8BBCF658EF0781B48C3B /* HabitWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWidget.swift; sourceTree = "<group>"; };
 		9CBC15BEADA4D40E4FB7CAA1 /* DayMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayMath.swift; sourceTree = "<group>"; };
@@ -128,10 +143,13 @@
 		B8FB54F164F49EB58BA59E05 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBDE987A74D692C11C717608 /* TreeCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeCellView.swift; sourceTree = "<group>"; };
 		BC8A0C0080295311681462DE /* TreeSpecies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeSpecies.swift; sourceTree = "<group>"; };
+		BE634E53660A2303376C5C59 /* Rubik.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Rubik.ttf; sourceTree = "<group>"; };
 		BF7DCDC105ADDA9DC06FEE6A /* TreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeView.swift; sourceTree = "<group>"; };
 		C43C80AC6385959A1B026F79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		D1177DCC2E5221A4DBE0D509 /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
 		D1CBA54DD0A619881769920E /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
+		D4C02399471F44B0F2C0DEA0 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
+		D9E9F92BBA26A75787543571 /* OFL-Rubik.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Rubik.txt"; sourceTree = "<group>"; };
 		DB2235CFE8CC8175770899CF /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		E78E806841EFC3FD00BAE6ED /* HabitForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC8A3103BE70B19B36E63E1A /* TreeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeState.swift; sourceTree = "<group>"; };
@@ -199,6 +217,7 @@
 		5EC2F53B6FCD6BC0C75C114A /* Rendering */ = {
 			isa = PBXGroup;
 			children = (
+				4EC131D986AAB240763F9847 /* ForestIslandView.swift */,
 				8C66F0DA247C27A14043824D /* SceneBackgroundView.swift */,
 				AD80DB168282B48670B66CA4 /* Scenery.swift */,
 				BF7DCDC105ADDA9DC06FEE6A /* TreeView.swift */,
@@ -226,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				B286A442F6D9BD6BA47E01D3 /* Core */,
+				B8F26FE1C02CA8068446E044 /* Fonts */,
 				771F389FC18A9E937C21F2AA /* Intents */,
 				5EC2F53B6FCD6BC0C75C114A /* Rendering */,
 			);
@@ -265,6 +285,7 @@
 				AE5E0775F51B2F677C4965B5 /* StreakCalculator.swift */,
 				BC8A0C0080295311681462DE /* TreeSpecies.swift */,
 				EC8A3103BE70B19B36E63E1A /* TreeState.swift */,
+				8D4A75200899E31492EAB810 /* Typography.swift */,
 				8A1EB8677DC33E92C3C4C4C2 /* WidgetSnapshot.swift */,
 			);
 			path = Core;
@@ -275,16 +296,27 @@
 			children = (
 				03BFB6602F1556F9E3D0F080 /* Components */,
 				3366EAB160990FB9FCFC3CE7 /* DashboardView.swift */,
-				057A8CC3693CF9E2430DF6F1 /* EverydayHabitRow.swift */,
 				B23AD399F6A52C16064C472C /* FocusTimerView.swift */,
 				07FCDC716316EC908044C29C /* ForestGridView.swift */,
 				2D1340555CDCF4C3B54A44BF /* HabitEditorView.swift */,
+				2D0FBC6BEB5507E8823747DE /* HabitMatrixRow.swift */,
 				712E58FD14F37FACC5713A84 /* HeatmapView.swift */,
 				49DE5F3B5F837E57F28E9D55 /* MenuBarPopoverView.swift */,
 				B2D4BFE5F0CD36DB8996685E /* SettingsView.swift */,
 				BBDE987A74D692C11C717608 /* TreeCellView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		B8F26FE1C02CA8068446E044 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				D4C02399471F44B0F2C0DEA0 /* Inter.ttf */,
+				44A2ACF15D90B0CDBFC4C909 /* OFL-Inter.txt */,
+				D9E9F92BBA26A75787543571 /* OFL-Rubik.txt */,
+				BE634E53660A2303376C5C59 /* Rubik.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		CC5407569BA23C7A1B3C9D6E /* Windows */ = {
@@ -330,6 +362,7 @@
 			buildConfigurationList = F330682DDF8CDF9EBADEF65A /* Build configuration list for PBXNativeTarget "HabitForestWidget" */;
 			buildPhases = (
 				458F237C258004847FB1470B /* Sources */,
+				39CBE28E999140CC26C577AD /* Resources */,
 			);
 			buildRules = (
 			);
@@ -382,11 +415,11 @@
 				};
 			};
 			buildConfigurationList = 5258494A18796D2065DFE866 /* Build configuration list for PBXProject "HabitForest" */;
-			developmentRegion = en;
+			developmentRegion = "pt-BR";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
-				en,
+				"pt-BR",
 			);
 			mainGroup = 0A238380CA8AEE01B54537CB;
 			minimizedProjectReferenceProxies = 1;
@@ -402,11 +435,26 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		39CBE28E999140CC26C577AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE5DD3419D98C22D5698D73B /* Inter.ttf in Resources */,
+				3F8189A15B56B2AAC78366CD /* OFL-Inter.txt in Resources */,
+				7805223DF407DCE18177512D /* OFL-Rubik.txt in Resources */,
+				68A40F6E36133F3A672F9126 /* Rubik.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5BF313AF2A23E2D8C23B442F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				E0018150FE5EAD158A8FED5A /* Assets.xcassets in Resources */,
+				31411DB0D9F3833F675DF7E9 /* Inter.ttf in Resources */,
+				E4AE52541A07F684C9E82E91 /* OFL-Inter.txt in Resources */,
+				DC84B785BC7AFD98FDCC7777 /* OFL-Rubik.txt in Resources */,
+				D06319DF0A528E16B221C4CD /* Rubik.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +468,7 @@
 				53AC6B8BC9234B466C24ABC5 /* AppGroup.swift in Sources */,
 				CE8563F72583EC129EE0999B /* Color+Hex.swift in Sources */,
 				C664C6B3AF81BA07EA74B628 /* DayMath.swift in Sources */,
+				1E313A5010284F8D048C8F64 /* ForestIslandView.swift in Sources */,
 				A1E2DEB74B9D11309AAF9E4F /* HabitWidget.swift in Sources */,
 				9AE5DC0ED41B7302A649E2E1 /* PendingActionQueue.swift in Sources */,
 				6974F629550F46D92E128F0B /* SceneBackgroundView.swift in Sources */,
@@ -429,6 +478,7 @@
 				B87E237701658D9A1FF0F9B7 /* TreeSpecies.swift in Sources */,
 				E5E630C1FDD3FEF8D1F700CC /* TreeState.swift in Sources */,
 				BB9BAC37EAA0160D1E434DC4 /* TreeView.swift in Sources */,
+				8FA937D6E18663521EA956F7 /* Typography.swift in Sources */,
 				F4975593D775F6D4AAD910CF /* WidgetSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,17 +495,18 @@
 				23E406D4FC032A3F6CB85704 /* DashboardView.swift in Sources */,
 				CC314A8F78A545DDE8FB31DE /* DayMath.swift in Sources */,
 				94DBBE4CEABF3A538C68903E /* EventKitManager.swift in Sources */,
-				C91AAB17F1BC05F537041448 /* EverydayHabitRow.swift in Sources */,
 				07F9D83DB426A9BD68BDF734 /* ExportService.swift in Sources */,
 				281607BBA3C195C980431BBA /* FocusFilterState.swift in Sources */,
 				7213FD50095E550EC6D22392 /* FocusSession.swift in Sources */,
 				1B4CBB156DE529F304B5579C /* FocusTimerView.swift in Sources */,
 				5EA72401DC9376813A1EEFC9 /* ForestGridView.swift in Sources */,
+				427E9D9A0CBA026D6A935657 /* ForestIslandView.swift in Sources */,
 				C3DDA597726DFE028C47E740 /* Habit.swift in Sources */,
 				4C91B291A0563551D00946D7 /* HabitContext.swift in Sources */,
 				CA01183629C18FD50FA757A5 /* HabitEditorView.swift in Sources */,
 				91B2A60817321D2D0D7BB478 /* HabitForestApp.swift in Sources */,
 				051121789156DEEFE6142419 /* HabitLog.swift in Sources */,
+				A0CFC3AA36B5A7AB1EE4666D /* HabitMatrixRow.swift in Sources */,
 				048FF6BD7AAAF69533692F1D /* HabitStore.swift in Sources */,
 				874A9C1A3E774135F3F1580C /* Haptics.swift in Sources */,
 				6819DD629D1C4BF91FD429A9 /* HeatmapView.swift in Sources */,
@@ -475,6 +526,7 @@
 				B716A27FE5968383960F2563 /* TreeSpecies.swift in Sources */,
 				A196A383D10A37EE6A42D07A /* TreeState.swift in Sources */,
 				9DFF8B337401C8B947592CEF /* TreeView.swift in Sources */,
+				F629FA12110F84F72A70528A /* Typography.swift in Sources */,
 				3F2456094A69D09396CF03EE /* VisualEffectView.swift in Sources */,
 				95119E0F4DE6227C7623E2E3 /* WidgetSnapshot.swift in Sources */,
 			);

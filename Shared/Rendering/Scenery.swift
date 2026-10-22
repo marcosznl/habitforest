@@ -71,7 +71,7 @@ enum TimeOfDay: String, CaseIterable {
         }
     }
 
-    /// Multiplier applied to the landscape so night scenes get darker.
+    /// Multiplicador aplicado à paisagem para escurecer as cenas noturnas.
     var landscapeDimming: Double {
         switch self {
         case .morning: 0.05
@@ -138,7 +138,7 @@ enum Weather: String {
         }
     }
 
-    /// Deterministic per day so every view shows the same weather.
+    /// Determinístico por dia, para todas as views mostrarem o mesmo clima.
     static func forDay(_ date: Date, season: Season, time: TimeOfDay) -> Weather {
         let seed = abs(DayMath.key(date).hashValueStable) % 100
         switch season {
@@ -177,7 +177,7 @@ struct Scenery {
 }
 
 private extension String {
-    /// FNV-1a; `hashValue` is randomized per launch, this is not.
+    /// FNV-1a; o `hashValue` muda a cada execução, este não.
     var hashValueStable: Int {
         var hash: UInt64 = 0xcbf29ce484222325
         for byte in utf8 {

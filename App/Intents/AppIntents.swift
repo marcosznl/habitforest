@@ -1,9 +1,9 @@
 import AppIntents
 import Foundation
 
-/// Focus Filter: configure in System Settings › Focus › (Trabalho, Pessoal, Não Perturbe…) ›
-/// Focus Filters › HabitForest. The system calls `perform()` when the Focus turns on, and again
-/// with default values when it turns off, which resets the filter.
+/// Filtro de Foco: configure em Ajustes do Sistema › Foco › (Trabalho, Pessoal, Não Perturbe…) ›
+/// Filtros de Foco › HabitForest. O sistema chama `perform()` quando o Foco liga e de novo,
+/// com os valores padrão, quando ele desliga, o que reinicia o filtro.
 struct HabitFocusFilter: SetFocusFilterIntent {
     static var title: LocalizedStringResource = "Filtrar hábitos"
     static var description: IntentDescription? = IntentDescription(

@@ -1,8 +1,8 @@
 import Foundation
 import WidgetKit
 
-/// A toggle performed outside the app process (widget button, Shortcuts) waiting to be applied
-/// to the SwiftData store by the app.
+/// Uma marcação feita fora do processo do app (botão do widget, Atalhos) esperando para ser aplicada
+/// ao banco SwiftData pelo app.
 struct PendingAction: Codable, Hashable, Sendable {
     var id = UUID()
     var habitID: UUID
@@ -20,7 +20,7 @@ enum PendingActionQueue {
         write(actions)
     }
 
-    /// Returns every queued action and empties the queue.
+    /// Devolve todas as ações na fila e a esvazia.
     static func drain() -> [PendingAction] {
         let actions = load()
         if !actions.isEmpty { write([]) }
@@ -38,11 +38,11 @@ enum PendingActionQueue {
     }
 }
 
-/// Entry point for toggles that may run inside the widget extension.
+/// Ponto de entrada para marcações que podem rodar dentro da extensão do widget.
 enum HabitActionRelay {
     static let pendingActionsNotification = Notification.Name("com.marcosznl.habitforest.pendingActions")
 
-    /// Flips today's state for the habit in the snapshot, queues it for the app and wakes the app.
+    /// Inverte o estado de hoje do hábito no snapshot, enfileira para o app e acorda o app.
     @discardableResult
     static func toggleToday(habitID: UUID) -> Bool {
         var snapshot = SnapshotStore.load()

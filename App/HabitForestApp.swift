@@ -6,8 +6,8 @@ struct HabitForestApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        // The main window and the menu bar popover are AppKit-managed (see MainWindowController and
-        // StatusItemController) so they can use custom NSWindow style masks and a global hot key.
+        // A janela principal e o popover da barra de menus são gerenciados pelo AppKit (veja MainWindowController e
+        // StatusItemController) para usar máscaras de estilo próprias do NSWindow e um atalho global.
         Settings {
             SettingsView()
                 .habitForestEnvironment()
@@ -17,10 +17,12 @@ struct HabitForestApp: App {
 }
 
 extension View {
-    /// Injects the shared observable services and the SwiftData container.
+    /// Injeta os serviços observáveis compartilhados e o contêiner do SwiftData.
     @MainActor
     func habitForestEnvironment() -> some View {
-        self
+        Typography.register()
+        return self
+            .font(.inter(.body))
             .environment(HabitStore.shared)
             .environment(FocusSession.shared)
             .environment(EventKitManager.shared)
@@ -56,7 +58,7 @@ struct HabitCommands: Commands {
                 Button(section.title) { MainWindowController.shared.show(section: section) }
             }
             Divider()
-            // ⌘⇧H is registered system-wide by HotKeyManager, so it is not bound here too.
+            // ⌘⇧H é registrado no sistema todo pelo HotKeyManager, então não é vinculado aqui também.
             Button("Mostrar barra de menus (⌘⇧H)") { StatusItemController.shared.togglePopover() }
         }
     }

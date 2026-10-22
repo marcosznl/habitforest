@@ -1,6 +1,6 @@
 import AppIntents
 
-/// Which macOS Focus a habit belongs to. Used by the Focus Filter to decide what is visible.
+/// A qual Foco do macOS o hábito pertence. O Filtro de Foco usa isso para decidir o que aparece.
 enum HabitContext: String, CaseIterable, Codable, Identifiable, AppEnum {
     case any, work, personal
 

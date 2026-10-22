@@ -1,7 +1,7 @@
 import Foundation
 
-/// What the active macOS Focus asked for, written by `HabitFocusFilter` and read by the store
-/// and `NotificationManager`.
+/// O que o Foco ativo do macOS pediu; gravado pelo `HabitFocusFilter` e lido pelo store
+/// e pelo `NotificationManager`.
 struct FocusFilterState: Equatable {
     static let didChangeNotification = Notification.Name("HabitForestFocusFilterDidChange")
 

@@ -4,13 +4,13 @@ import SwiftData
 @Model
 final class HabitLog {
     var id: UUID = UUID()
-    /// Always the start of the local day.
+    /// Sempre o início do dia local.
     var date: Date = Date.now
     var isCompleted: Bool = false
     var minutesFocused: Int = 0
-    /// Optional one-line journal entry written when the habit is completed.
+    /// Anotação opcional de uma linha escrita ao concluir o hábito.
     var dailyNote: String?
-    /// Day covered by Greenhouse mode after the pause ended.
+    /// Dia coberto pela Estufa depois que a pausa terminou.
     var isFrozen: Bool = false
     var habit: Habit?
 

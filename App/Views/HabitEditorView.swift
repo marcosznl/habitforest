@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Create or edit a habit: name, species, color, focus goal, Focus context and reminder.
+/// Cria ou edita um hábito: nome, espécie, cor, meta de foco, contexto de Foco e lembrete.
 struct HabitEditorView: View {
     @Environment(HabitStore.self) private var store
     @Environment(\.dismiss) private var dismiss
@@ -21,13 +21,13 @@ struct HabitEditorView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(habit == nil ? "Plantar novo hábito" : "Editar hábito")
-                .font(.title2.weight(.bold))
+                .font(.rubik(.title2))
 
             TextField("Nome do hábito", text: $name)
                 .textFieldStyle(.roundedBorder)
-                .font(.title3)
+                .font(.rubik(.title3))
 
-            Text("Espécie").font(.headline)
+            Text("Espécie").font(.rubik(.headline, weight: .semibold))
             LazyVGrid(columns: speciesColumns, spacing: 10) {
                 ForEach(TreeSpecies.allCases) { option in
                     Button {
@@ -39,7 +39,7 @@ struct HabitEditorView: View {
                             TreeView(species: option, stage: .mature, tint: option == species ? color : nil,
                                      animated: option == species)
                                 .frame(width: 64, height: 64)
-                            Text(option.title).font(.caption)
+                            Text(option.title).font(.inter(.caption))
                         }
                         .padding(6)
                         .frame(maxWidth: .infinity)

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// One day in the Everyday matrix: the tree as it stood at the end of that day.
+/// Um dia na matriz de hábitos: a árvore como estava no fim daquele dia.
 struct TreeCellView: View {
     let day: DaySnapshot
     let species: TreeSpecies

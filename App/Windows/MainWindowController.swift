@@ -1,8 +1,8 @@
 import AppKit
 import SwiftUI
 
-/// Borderless-looking floating window: full-size content, transparent title bar, draggable by
-/// its background, translucent behind-window material and optional always-on-top level.
+/// Janela flutuante com aparência sem bordas: conteúdo em tela cheia, barra de título transparente,
+/// arrastável pelo fundo, material translúcido e opção de ficar sempre no topo.
 @MainActor
 final class MainWindowController: NSObject, NSWindowDelegate {
     static let shared = MainWindowController()
@@ -24,7 +24,7 @@ final class MainWindowController: NSObject, NSWindowDelegate {
 
     private func makeWindow() -> NSWindow {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 1180, height: 720),
+            contentRect: NSRect(x: 0, y: 0, width: 1320, height: 780),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false

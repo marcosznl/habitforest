@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Landscape behind the forest: sky by time of day, hills by season and weather particles.
+/// Paisagem atrás da floresta: céu conforme o horário, colinas conforme a estação e partículas de clima.
 struct SceneBackgroundView: View {
     var animated = true
     var showsHills = true
@@ -13,6 +13,63 @@ struct SceneBackgroundView: View {
         } else {
             SceneLayers(scenery: Scenery(), animated: false, showsHills: showsHills)
         }
+    }
+}
+
+/// Fundo verde-escuro com feixes de luz, no clima do site do Forest. A luz acompanha o horário
+/// (manhã, tarde, pôr do sol, noite) e as partículas seguem o clima do dia.
+struct ForestBackdropView: View {
+    var animated = true
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 60)) { context in
+            let scenery = Scenery(date: context.date)
+            ZStack {
+                LinearGradient(colors: Self.colors(for: scenery.time), startPoint: .top, endPoint: .bottom)
+                LightRays().opacity(scenery.time == .night ? 0.3 : 1)
+                if animated && scenery.weather != .clear {
+                    TimelineView(.animation(minimumInterval: 1 / 30)) { frame in
+                        WeatherCanvas(weather: scenery.weather, time: frame.date.timeIntervalSinceReferenceDate)
+                    }
+                    .opacity(0.5)
+                    .allowsHitTesting(false)
+                }
+            }
+        }
+    }
+
+    static func colors(for time: TimeOfDay) -> [Color] {
+        switch time {
+        case .morning:
+            [Color(red: 0.20, green: 0.50, blue: 0.38), Color(red: 0.07, green: 0.27, blue: 0.20), Color(red: 0.03, green: 0.15, blue: 0.11)]
+        case .afternoon:
+            [Color(red: 0.11, green: 0.42, blue: 0.32), Color(red: 0.04, green: 0.22, blue: 0.17), Color(red: 0.02, green: 0.13, blue: 0.10)]
+        case .sunset:
+            [Color(red: 0.42, green: 0.36, blue: 0.22), Color(red: 0.12, green: 0.22, blue: 0.15), Color(red: 0.03, green: 0.12, blue: 0.09)]
+        case .night:
+            [Color(red: 0.05, green: 0.16, blue: 0.16), Color(red: 0.02, green: 0.09, blue: 0.09), Color(red: 0.01, green: 0.05, blue: 0.05)]
+        }
+    }
+}
+
+/// Feixes de luz diagonais entrando pelo topo.
+private struct LightRays: View {
+    var body: some View {
+        Canvas { ctx, size in
+            for (i, x) in [0.58, 0.7, 0.8, 0.9].enumerated() {
+                var ray = Path()
+                let w = size.width * (0.05 + 0.03 * Double(i % 2))
+                ray.move(to: CGPoint(x: size.width * x, y: 0))
+                ray.addLine(to: CGPoint(x: size.width * x + w, y: 0))
+                ray.addLine(to: CGPoint(x: size.width * (x - 0.25) + w * 2, y: size.height))
+                ray.addLine(to: CGPoint(x: size.width * (x - 0.25), y: size.height))
+                ray.closeSubpath()
+                ctx.fill(ray, with: .linearGradient(Gradient(colors: [.white.opacity(0.10), .clear]),
+                                                    startPoint: CGPoint(x: size.width * x, y: 0),
+                                                    endPoint: CGPoint(x: size.width * (x - 0.15), y: size.height * 0.8)))
+            }
+        }
+        .blur(radius: 18)
     }
 }
 

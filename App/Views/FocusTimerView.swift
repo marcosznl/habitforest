@@ -1,7 +1,7 @@
 import EventKit
 import SwiftUI
 
-/// Pomodoro with a tree that grows through every stage, ambient sound and Calendar time blocks.
+/// Pomodoro com uma árvore que passa por todos os estágios, som ambiente e blocos no Calendário.
 struct FocusTimerView: View {
     @Environment(HabitStore.self) private var store
     @Environment(FocusSession.self) private var session
@@ -30,11 +30,12 @@ struct FocusTimerView: View {
                                 .rotationEffect(.degrees(-90))
                                 .animation(.linear(duration: 0.5), value: session.progress)
                             VStack(spacing: 0) {
-                                TreeView(species: selectedHabit?.species ?? .oak, stage: session.growthStage,
-                                         tint: selectedColor, animated: session.phase == .running)
-                                    .frame(width: 150, height: 150)
+                                TreeEmblemView(species: selectedHabit?.species ?? .oak, stage: session.growthStage,
+                                               tint: selectedColor, animated: session.phase == .running)
+                                    .frame(width: 160, height: 160)
+                                    .padding(.bottom, 6)
                                 Text(session.remainingLabel)
-                                    .font(.system(size: 40, weight: .semibold, design: .rounded).monospacedDigit())
+                                    .font(.rubik(size: 40, weight: .semibold).monospacedDigit())
                             }
                         }
                         .frame(width: 280, height: 280)
@@ -112,7 +113,7 @@ struct FocusTimerView: View {
 
     private var agenda: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Agenda de hoje").font(.title2.weight(.semibold)).padding(.top, 58)
+            Text("Agenda de hoje").font(.rubik(.title2, weight: .semibold)).padding(.top, 58)
             GlassCard {
                 if !eventKit.calendarAuthorized {
                     VStack(alignment: .leading, spacing: 8) {
@@ -132,7 +133,7 @@ struct FocusTimerView: View {
                                 VStack(alignment: .leading) {
                                     Text(event.title ?? "Sem título").lineLimit(1)
                                     Text("\(event.startDate.formatted(date: .omitted, time: .shortened)) – \(event.endDate.formatted(date: .omitted, time: .shortened))")
-                                        .font(.caption).foregroundStyle(.secondary)
+                                        .font(.inter(.caption)).foregroundStyle(.secondary)
                                 }
                             }
                         }
@@ -140,7 +141,7 @@ struct FocusTimerView: View {
                 }
             }
 
-            Text("Agendar bloco de foco").font(.headline)
+            Text("Agendar bloco de foco").font(.rubik(.headline, weight: .semibold))
             GlassCard {
                 VStack(alignment: .leading, spacing: 10) {
                     DatePicker("Início", selection: $plannedStart)
@@ -148,7 +149,7 @@ struct FocusTimerView: View {
                     HStack {
                         Button("Adicionar ao Calendário", systemImage: "calendar.badge.plus") { planBlock() }
                             .disabled(!eventKit.calendarAuthorized)
-                        if let planFeedback { Text(planFeedback).font(.caption).foregroundStyle(.secondary) }
+                        if let planFeedback { Text(planFeedback).font(.inter(.caption)).foregroundStyle(.secondary) }
                     }
                 }
             }

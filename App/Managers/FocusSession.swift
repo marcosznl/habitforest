@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// Pomodoro timer shared by the dashboard and the menu bar popover.
+/// Temporizador Pomodoro compartilhado pelo painel e pelo popover da barra de menus.
 @MainActor
 @Observable
 final class FocusSession {
@@ -29,7 +29,7 @@ final class FocusSession {
     var progress: Double { total > 0 ? 1 - remaining / total : 0 }
     var isActive: Bool { phase == .running || phase == .paused }
 
-    /// The tree grows through every stage during the session.
+    /// A árvore passa por todos os estágios durante a sessão.
     var growthStage: GrowthStage {
         switch progress {
         case ..<0.05: .seed

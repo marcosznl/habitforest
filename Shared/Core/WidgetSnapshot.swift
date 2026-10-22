@@ -1,8 +1,8 @@
 import Foundation
 import WidgetKit
 
-/// Lightweight copy of the forest that the app publishes for the widget and App Intents.
-/// The widget is sandboxed and cannot open the SwiftData store in iCloud Drive, so it reads this.
+/// Cópia leve da floresta que o app publica para o widget e os App Intents.
+/// O widget roda em sandbox e não consegue abrir o banco no iCloud Drive, então lê esta cópia.
 struct WidgetSnapshot: Codable, Sendable {
     var generatedAt: Date
     var habits: [WidgetHabit]
@@ -26,7 +26,7 @@ struct WidgetHabit: Codable, Identifiable, Hashable, Sendable {
         days.first { $0.date == DayMath.today() }?.state == .completed
     }
 
-    /// Last `count` days relative to *now*, filling days the snapshot does not know about.
+    /// Últimos `count` dias em relação a *agora*, preenchendo os dias que o snapshot não conhece.
     func window(days count: Int, today: Date = DayMath.today()) -> [DaySnapshot] {
         let byDate = Dictionary(days.map { ($0.date, $0) }, uniquingKeysWith: { a, _ in a })
         let lastKnown = days.last
@@ -40,7 +40,7 @@ struct WidgetHabit: Codable, Identifiable, Hashable, Sendable {
         }
     }
 
-    /// Optimistic update used when the widget toggles a habit while the app is not running.
+    /// Atualização otimista usada quando o widget marca um hábito com o app fechado.
     mutating func applyToday(completed: Bool, today: Date = DayMath.today()) {
         let previous = days.last { $0.date < today }
         let baseStreak = previous?.streak ?? 0

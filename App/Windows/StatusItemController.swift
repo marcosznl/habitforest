@@ -1,8 +1,8 @@
 import AppKit
 import SwiftUI
 
-/// Menu bar extra backed by NSStatusItem + NSPopover so the global ⌘⇧H shortcut can open it
-/// programmatically (SwiftUI's MenuBarExtra has no API for that).
+/// Item da barra de menus com NSStatusItem + NSPopover, para que o atalho global ⌘⇧H consiga abri-lo
+/// por código (o MenuBarExtra do SwiftUI não tem API para isso).
 @MainActor
 final class StatusItemController: NSObject, NSPopoverDelegate {
     static let shared = StatusItemController()

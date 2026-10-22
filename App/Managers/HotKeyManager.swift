@@ -1,7 +1,7 @@
 import Carbon.HIToolbox
 import Foundation
 
-/// System-wide shortcut (⌘⇧H) via Carbon hot keys: works without Accessibility permission.
+/// Atalho global (⌘⇧H) via hot keys do Carbon: funciona sem permissão de Acessibilidade.
 final class HotKeyManager {
     static let shared = HotKeyManager()
 

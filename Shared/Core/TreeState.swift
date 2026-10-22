@@ -1,18 +1,18 @@
 import Foundation
 
-/// What happened on a single calendar day for a habit.
+/// O que aconteceu com um hábito num dia do calendário.
 enum DayState: String, Codable, Sendable {
     case completed
     case missed
-    /// Covered by Greenhouse mode: neither counts nor breaks the streak.
+    /// Coberto pela Estufa: não conta nem quebra a sequência.
     case frozen
-    /// Today, not done yet.
+    /// Hoje, ainda não feito.
     case pending
-    /// Before the habit existed.
+    /// Antes de o hábito existir.
     case beforeStart
 }
 
-/// Growth stage driven by the current streak.
+/// Estágio de crescimento definido pela sequência atual.
 enum GrowthStage: Int, Codable, CaseIterable, Comparable, Sendable {
     case seed, sprout, young, mature, ancient
 
@@ -50,11 +50,11 @@ enum GrowthStage: Int, Codable, CaseIterable, Comparable, Sendable {
 }
 
 enum TreeHealth: String, Codable, CaseIterable, Sendable {
-    /// Alive and green.
+    /// Viva e verde.
     case healthy
-    /// Leaves falling: one day missed, streak still rescuable.
+    /// Folhas caindo: um dia falhado, sequência ainda salvável.
     case struggling
-    /// Dry: two or more consecutive days missed, streak broken.
+    /// Seca: dois ou mais dias falhados seguidos, sequência quebrada.
     case withered
 
     var title: String {

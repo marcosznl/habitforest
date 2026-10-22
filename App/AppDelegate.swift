@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        Typography.register()
         let store = HabitStore.shared
         store.seedIfNeeded()
         store.drainPendingActions()
@@ -20,7 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         Task { await EventKitManager.shared.syncReminders(store: store) }
 
-        // Day rollover: refresh trees, widget and reminders at midnight and when the Mac wakes.
+        // Virada do dia: atualiza árvores, widget e lembretes à meia-noite e quando o Mac acorda.
         NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
         ) { _ in
@@ -43,17 +44,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
-    /// Keep running in the menu bar after the window closes.
+    /// Continua rodando na barra de menus depois que a janela fecha.
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
 
-    /// `habitforest://` links from the widget and Calendar events.
+    /// Links `habitforest://` vindos do widget e dos eventos do Calendário.
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls where url.scheme == "habitforest" {
             let section: DashboardSection = switch url.host() {
             case "focus": .focus
             case "stats": .stats
             case "forest": .forest
-            default: .everyday
+            default: .habits
             }
             MainWindowController.shared.show(section: section)
         }

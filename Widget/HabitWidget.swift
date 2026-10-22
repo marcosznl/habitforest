@@ -9,8 +9,8 @@ struct HabitForestWidgetBundle: WidgetBundle {
     }
 }
 
-/// Interactive desktop widget: the Everyday matrix pinned to the wallpaper, with a
-/// "Regar Árvore" button per habit.
+/// Widget interativo de mesa: a matriz de hábitos fixada no papel de parede, com um
+/// botão "Regar Árvore" por hábito.
 struct HabitWidget: Widget {
     let kind = "HabitForestMatrix"
 
@@ -21,7 +21,7 @@ struct HabitWidget: Widget {
                     SceneLayers(scenery: Scenery(date: entry.date), animated: false, showsHills: true)
                         .overlay(Color.black.opacity(0.15))
                 }
-                .widgetURL(URL(string: "habitforest://everyday"))
+                .widgetURL(URL(string: "habitforest://habitos"))
         }
         .configurationDisplayName("Floresta de Hábitos")
         .description("Sua matriz de hábitos com árvores que crescem a cada dia.")
@@ -46,7 +46,7 @@ struct HabitTimelineProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<HabitEntry>) -> Void) {
         let habits = SnapshotStore.load().habits
-        // Refresh at midnight (new column) and hourly for the time-of-day backdrop.
+        // Atualiza à meia-noite (nova coluna) e de hora em hora para o fundo acompanhar o horário.
         let now = Date.now
         let entries = (0..<6).map { offset in
             HabitEntry(date: Calendar.current.date(byAdding: .hour, value: offset, to: now) ?? now, habits: habits)
@@ -69,12 +69,17 @@ struct HabitWidgetView: View {
     @Environment(\.widgetFamily) private var family
     let entry: HabitEntry
 
+    init(entry: HabitEntry) {
+        Typography.register()
+        self.entry = entry
+    }
+
     var body: some View {
         if entry.habits.isEmpty {
             VStack(spacing: 6) {
-                Image(systemName: "leaf.fill").font(.title)
+                Image(systemName: "leaf.fill").font(.rubik(.title))
                 Text("Abra o HabitForest para plantar seu primeiro hábito.")
-                    .font(.caption).multilineTextAlignment(.center)
+                    .font(.inter(.caption)).multilineTextAlignment(.center)
             }
             .foregroundStyle(.white)
         } else {
@@ -88,7 +93,7 @@ struct HabitWidgetView: View {
     }
 }
 
-/// 2×2 trees, each a button that waters the habit.
+/// Árvores em 2×2, cada uma um botão que rega o hábito.
 private struct SmallForest: View {
     let habits: [WidgetHabit]
 
@@ -110,7 +115,7 @@ private struct SmallForest: View {
             VStack(spacing: 0) {
                 TreeView(species: habit.species, stage: habit.stage, health: habit.health, tint: Color(hex: habit.colorHex))
                 Text("\(habit.streak)d")
-                    .font(.caption2.weight(.bold).monospacedDigit())
+                    .font(.inter(.caption2, weight: .bold).monospacedDigit())
                     .foregroundStyle(.white)
             }
             .padding(4)
@@ -128,10 +133,10 @@ private struct MatrixWidget: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Everyday").font(.headline)
+                Text("Hábitos").font(.rubik(.headline, weight: .semibold))
                 Spacer()
                 let done = habits.filter(\.completedToday).count
-                Text("\(done)/\(habits.count) hoje").font(.caption.monospacedDigit())
+                Text("\(done)/\(habits.count) hoje").font(.inter(.caption).monospacedDigit())
             }
             .foregroundStyle(.white)
 
@@ -149,7 +154,7 @@ private struct MatrixWidget: View {
                     .buttonStyle(.plain)
 
                     Text(habit.name)
-                        .font(.caption.weight(.medium))
+                        .font(.inter(.caption, weight: .medium))
                         .foregroundStyle(.white)
                         .lineLimit(1)
                         .frame(width: nameWidth - 32, alignment: .leading)

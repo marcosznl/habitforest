@@ -66,7 +66,7 @@ private struct IntegrationSettings: View {
                     }
                 }
                 Text("Os banners trazem os botões “Regar Árvore” e “Adiar 15 min”. Configure o filtro em Ajustes do Sistema › Foco › Filtros de Foco › HabitForest para silenciá-los.")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.inter(.caption)).foregroundStyle(.secondary)
             }
             Section("Calendário e Lembretes") {
                 LabeledContent("Calendário") {
@@ -85,7 +85,7 @@ private struct IntegrationSettings: View {
                         }
                     }
                 if let error = eventKit.lastError {
-                    Text(error).font(.caption).foregroundStyle(.red)
+                    Text(error).font(.inter(.caption)).foregroundStyle(.red)
                 }
             }
         }
@@ -116,7 +116,7 @@ private struct StorageSettings: View {
                 }
                 Toggle("Salvar no iCloud Drive (HabitForest/)", isOn: $useICloudDrive)
                 Text("A mudança vale na próxima abertura do app. Use o banco em um Mac por vez para evitar conflitos de sincronização.")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.inter(.caption)).foregroundStyle(.secondary)
             }
             Section("Exportar") {
                 Button("Compartilhar backup em JSON…", systemImage: "square.and.arrow.up") {

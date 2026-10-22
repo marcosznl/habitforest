@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The nine botanical species a habit can grow into.
+/// As nove espécies botânicas em que um hábito pode crescer.
 enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
     case oak, pine, bonsai, cherry, willow, cactus, sequoia, bamboo, birch
 
@@ -31,7 +31,7 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         }
     }
 
-    /// Suggested theme color when the species is picked.
+    /// Cor de tema sugerida ao escolher a espécie.
     var defaultHex: String {
         switch self {
         case .oak: "#3E8E41"
@@ -71,7 +71,15 @@ enum TreeSpecies: String, CaseIterable, Codable, Identifiable, Sendable {
         }
     }
 
-    /// Smaller species stay shorter even when ancient.
+    /// Espécies que mudam de cor no outono e ficam claras no inverno.
+    var isDeciduous: Bool {
+        switch self {
+        case .oak, .cherry, .willow, .birch: true
+        default: false
+        }
+    }
+
+    /// Espécies menores continuam baixas mesmo quando ancestrais.
     var heightFactor: CGFloat {
         switch self {
         case .bonsai: 0.72

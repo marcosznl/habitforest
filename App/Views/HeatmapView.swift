@@ -1,7 +1,7 @@
 import Charts
 import SwiftUI
 
-/// Swift Charts statistics: GitHub-style 365-day heatmap, completion by weekday and focus time.
+/// Estatísticas com Swift Charts: mapa de calor de 365 dias estilo GitHub, conclusão por dia da semana e tempo de foco.
 struct HeatmapView: View {
     @Environment(HabitStore.self) private var store
     @State private var selectedHabitID: UUID? = nil
@@ -45,7 +45,7 @@ struct HeatmapView: View {
 
                 GlassCard {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Mapa de calor").font(.headline)
+                        Text("Mapa de calor").font(.rubik(.headline, weight: .semibold))
                         heatmap(cells)
                     }
                 }
@@ -53,13 +53,13 @@ struct HeatmapView: View {
                 HStack(alignment: .top, spacing: 18) {
                     GlassCard {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Conclusão por dia da semana").font(.headline)
+                            Text("Conclusão por dia da semana").font(.rubik(.headline, weight: .semibold))
                             weekdayChart(weekdayRates(from: cells))
                         }
                     }
                     GlassCard {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Minutos de foco (30 dias)").font(.headline)
+                            Text("Minutos de foco (30 dias)").font(.rubik(.headline, weight: .semibold))
                             focusChart(focusDays(for: habits))
                         }
                     }
@@ -74,14 +74,14 @@ struct HeatmapView: View {
         return store.habits
     }
 
-    // MARK: - Data
+    // MARK: - Dados
 
     private func heatCells(for habits: [Habit]) -> [HeatCell] {
         let days = DayMath.days(count: 365)
         guard let first = days.first else { return [] }
         let calendar = Calendar.current
         let calculators = habits.map { $0.calculator() }
-        // Align columns to the start of the week so rows are weekdays.
+        // Alinha as colunas ao início da semana para que as linhas sejam os dias da semana.
         let firstWeekdayOffset = (calendar.component(.weekday, from: first) - calendar.firstWeekday + 7) % 7
 
         return days.enumerated().map { index, day in
@@ -110,7 +110,7 @@ struct HeatmapView: View {
         }
     }
 
-    // MARK: - Charts
+    // MARK: - Gráficos
 
     private func heatmap(_ cells: [HeatCell]) -> some View {
         let symbols = Calendar.current.veryShortWeekdaySymbols
@@ -156,7 +156,7 @@ struct HeatmapView: View {
                 .cornerRadius(4)
                 .annotation(position: .top) {
                     Text(item.rate.formatted(.percent.precision(.fractionLength(0))))
-                        .font(.caption2).foregroundStyle(.secondary)
+                        .font(.inter(.caption2)).foregroundStyle(.secondary)
                 }
         }
         .chartYScale(domain: 0...1)
@@ -182,7 +182,7 @@ struct HeatmapView: View {
         .frame(height: 200)
     }
 
-    // MARK: - Tiles
+    // MARK: - Cartões
 
     private func tiles(habits: [Habit], cells: [HeatCell]) -> some View {
         let summaries = habits.map(\.summary)
@@ -209,8 +209,8 @@ private struct StatTile: View {
         GlassCard {
             VStack(alignment: .leading, spacing: 6) {
                 Image(systemName: symbol).foregroundStyle(color)
-                Text(value).font(.title.weight(.bold)).monospacedDigit()
-                Text(title).font(.caption).foregroundStyle(.secondary)
+                Text(value).font(.rubik(.title)).monospacedDigit()
+                Text(title).font(.inter(.caption)).foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

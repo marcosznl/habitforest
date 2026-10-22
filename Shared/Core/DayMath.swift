@@ -1,6 +1,6 @@
 import Foundation
 
-/// Calendar helpers. Every log and snapshot day is normalized to the start of the local day.
+/// Utilitários de calendário. Todo dia de registro e de snapshot é normalizado para o início do dia local.
 enum DayMath {
     static var calendar: Calendar { Calendar.current }
 
@@ -16,7 +16,7 @@ enum DayMath {
         calendar.date(byAdding: .day, value: days, to: start(of: date)) ?? date
     }
 
-    /// `count` days ending at `end` (inclusive), oldest first.
+    /// `count` dias terminando em `end` (inclusive), do mais antigo ao mais novo.
     static func days(endingAt end: Date = .now, count: Int) -> [Date] {
         guard count > 0 else { return [] }
         return (0..<count).reversed().map { add(-$0, to: end) }

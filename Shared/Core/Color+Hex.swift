@@ -30,7 +30,7 @@ extension Color {
         return String(format: "#%02X%02X%02X", r, g, b)
     }
 
-    /// Linear blend toward another color (0 = self, 1 = other).
+    /// Mistura linear com outra cor (0 = esta, 1 = a outra).
     func mixed(with other: Color, amount: Double) -> Color {
         guard let a = NSColor(self).usingColorSpace(.sRGB),
               let b = NSColor(other).usingColorSpace(.sRGB) else { return self }

@@ -2,7 +2,7 @@
 
 Rastreador de hábitos nativo para macOS no estilo Forest: cada hábito é uma árvore que cresce com a sequência, perde folhas quando você falha um dia e seca quando a sequência quebra.
 
-Requer macOS 14+ e Xcode 16+.
+Requer macOS 14+ e Xcode 16+ (testado no Xcode 27.1).
 
 ## Abrir e compilar
 
@@ -27,8 +27,10 @@ open HabitForest.xcodeproj
 
 - **Saúde:** `.healthy` (em dia) → `.struggling` (1 dia falhado; a sequência ainda pode ser salva) → `.withered` (2 dias seguidos falhados; a sequência zera).
 - **Estufa:** pausa o hábito nas férias. Os dias pausados não contam e não quebram a sequência, mesmo depois de sair da estufa (ficam gravados como `HabitLog.isFrozen`).
+- **Hábitos:** cada linha mostra a árvore do hábito (clique nela para trocar a espécie), os últimos 30 dias com legenda e o botão **Regar** de hoje.
+- **Floresta:** ilha isométrica que começa vazia e ganha uma árvore a cada dia regado (últimos 60 dias). Dias não regados não deixam árvores mortas.
 - **Diário:** ao regar o dia de hoje abre-se um campo de uma linha (`HabitLog.dailyNote`).
-- **Cenário:** o céu muda conforme o horário (manhã, tarde, pôr do sol, noite), o terreno conforme a estação (o hemisfério é detectado pela região ou definido em Ajustes) e o clima é sorteado por dia (chuva, neve, pétalas, folhas, vaga-lumes).
+- **Cenário:** a luz do fundo muda conforme o horário (manhã, tarde, pôr do sol, noite), a ilha e as árvores mudam com a estação (grama, areia de outono, neve; o hemisfério é detectado pela região ou definido em Ajustes) e o clima é sorteado por dia (chuva, neve, pétalas, folhas, vaga-lumes).
 
 ## Integrações com o macOS
 
@@ -48,6 +50,17 @@ open HabitForest.xcodeproj
 
 O Filtro de Foco é configurado em **Ajustes do Sistema › Foco › (um Foco) › Filtros de Foco › HabitForest**. Nele você escolhe qual contexto de hábitos aparece e se os lembretes ficam silenciados.
 
+## Visual
+
+- Árvores desenhadas em código, chapadas em duas tonalidades (luz vindo da esquerda), com variações de outono e inverno.
+- Fontes: **Rubik** (títulos) e **Inter** (texto), as mesmas do site do Forest, ambas com licença OFL e empacotadas em `Shared/Fonts`.
+- Ícone gerado a partir do mesmo desenho das árvores. Para gerar de novo:
+
+```bash
+swiftc -parse-as-library -o /tmp/gerar-icone Tools/GerarIcone/main.swift Shared/Core/*.swift Shared/Rendering/*.swift
+/tmp/gerar-icone App/Resources/Assets.xcassets/AppIcon.appiconset
+```
+
 ## Persistência
 
 O banco SwiftData fica em `~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest/HabitForest.store`. Se o iCloud Drive não estiver disponível, ou se a opção estiver desligada em Ajustes › Dados, ele vai para `~/Library/Application Support/HabitForest/`.
@@ -60,7 +73,8 @@ Use o banco em um Mac por vez: o iCloud Drive sincroniza o arquivo SQLite inteir
 
 ```
 App/        app principal (modelos SwiftData, store, managers, views, intents, janelas)
-Shared/     compilado no app e no widget (lógica de sequência, desenho das árvores, cenário, snapshot, ToggleHabitIntent)
+Shared/     compilado no app e no widget (lógica de sequência, árvores, ilha, cenário, fontes, snapshot, ToggleHabitIntent)
 Widget/     extensão WidgetKit
+Tools/      gerador do ícone
 project.yml especificação do XcodeGen
 ```

@@ -3,7 +3,7 @@ import CoreTransferable
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// JSON backup and the "Retrato da Floresta" PNG, shared through the native share sheet.
+/// Backup em JSON e o PNG "Retrato da Floresta", compartilhados pelo menu nativo do macOS.
 @MainActor
 enum ExportService {
     struct HabitExport: Codable {
@@ -70,7 +70,7 @@ enum ExportService {
         return url
     }
 
-    /// Native NSSharingServicePicker (AirDrop, Mensagens, Mail, Notas…) anchored to a view.
+    /// NSSharingServicePicker nativo (AirDrop, Mensagens, Mail, Notas…) ancorado numa view.
     static func share(_ items: [Any], from view: NSView?) {
         guard let view = view ?? NSApp.keyWindow?.contentView else { return }
         let picker = NSSharingServicePicker(items: items)
@@ -79,7 +79,7 @@ enum ExportService {
     }
 }
 
-/// Transferable portrait for SwiftUI `ShareLink`.
+/// Retrato transferível para o `ShareLink` do SwiftUI.
 struct ForestPortrait: Transferable {
     let habitIDs: [UUID]
 

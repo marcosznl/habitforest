@@ -30,8 +30,8 @@ enum SoundEffect {
     case waterDrop, leafRustle, chime
 }
 
-/// Ambient loops and organic effects, synthesized in real time with AVAudioEngine so the app
-/// ships without audio assets.
+/// Sons ambientes em loop e efeitos orgânicos, sintetizados em tempo real com AVAudioEngine, para que o app
+/// não precise de arquivos de áudio.
 final class AudioManager {
     static let shared = AudioManager()
 
@@ -78,7 +78,7 @@ final class AudioManager {
         }
     }
 
-    // MARK: - Effects
+    // MARK: - Efeitos
 
     func play(_ effect: SoundEffect) {
         guard AppGroup.defaults.bool(forKey: SettingsKey.soundsEnabled), let buffer = effectBuffers[effect] else { return }
@@ -91,7 +91,7 @@ final class AudioManager {
         if !effectsPlayer.isPlaying { effectsPlayer.play() }
     }
 
-    // MARK: - Ambient
+    // MARK: - Ambiente
 
     func setAmbient(_ sound: AmbientSound) {
         currentAmbient = sound
@@ -109,7 +109,7 @@ final class AudioManager {
         setAmbient(.silence)
     }
 
-    // MARK: - Internals
+    // MARK: - Interno
 
     private func startEngineIfNeeded() -> Bool {
         if engine.isRunning { return true }
@@ -134,8 +134,8 @@ final class AudioManager {
     }
 }
 
-/// Real-time noise synthesis. Accessed from the audio render thread; the few fields written by
-/// the main thread are plain scalars, which is acceptable for this use.
+/// Síntese de ruído em tempo real. Acessado pela thread de áudio; os poucos campos escritos pela
+/// thread principal são escalares simples, o que é aceitável neste uso.
 private final class AmbientGenerator: @unchecked Sendable {
     var sound: AmbientSound = .silence
     var volume: Float = 0.5

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Menu bar popover (⌘⇧H from anywhere). ⌘1…⌘9 water the matching habit.
+/// Popover da barra de menus (⌘⇧H de qualquer lugar). ⌘1…⌘9 regam o hábito correspondente.
 struct MenuBarPopoverView: View {
     @Environment(HabitStore.self) private var store
     @Environment(FocusSession.self) private var session
@@ -36,9 +36,9 @@ struct MenuBarPopoverView: View {
                 .frame(height: 74)
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Hoje").font(.title2.weight(.bold))
+                    Text("Hoje").font(.rubik(.title2))
                     Text("\(store.completedTodayCount) de \(store.activeHabits.count) árvores regadas")
-                        .font(.caption)
+                        .font(.inter(.caption))
                 }
                 Spacer()
                 ProgressView(value: Double(store.completedTodayCount), total: Double(max(1, store.activeHabits.count)))
@@ -82,7 +82,7 @@ struct MenuBarPopoverView: View {
         .padding(10)
     }
 
-    /// Invisible buttons that own the ⌘1…⌘9 shortcuts while the popover is key.
+    /// Botões invisíveis que recebem os atalhos ⌘1…⌘9 enquanto o popover está ativo.
     private var numberShortcuts: some View {
         ZStack {
             ForEach(1...9, id: \.self) { number in
@@ -119,14 +119,14 @@ private struct PopoverHabitRow: View {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(habit.name).lineLimit(1)
                     Text("\(summary.currentStreak) dias · \(summary.stage.title)")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.inter(.caption)).foregroundStyle(.secondary)
                 }
                 Spacer()
                 if let number {
-                    Text("⌘\(number)").font(.caption.monospaced()).foregroundStyle(.tertiary)
+                    Text("⌘\(number)").font(.inter(.caption).monospaced()).foregroundStyle(.tertiary)
                 }
                 Image(systemName: summary.completedToday ? "drop.fill" : "drop")
-                    .font(.title3)
+                    .font(.rubik(.title3))
                     .foregroundStyle(summary.completedToday ? habit.themeColor : .secondary)
                     .contentTransition(.symbolEffect(.replace))
             }

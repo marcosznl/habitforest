@@ -1,9 +1,9 @@
 import Foundation
 import SwiftData
 
-/// Builds the SwiftData container. By default the store lives in the user's iCloud Drive
-/// (`~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest/`) so it follows the Mac
-/// across reinstalls; it falls back to Application Support when iCloud Drive is unavailable.
+/// Monta o contêiner do SwiftData. Por padrão o banco fica no iCloud Drive do usuário
+/// (`~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest/`), para sobreviver a reinstalações;
+/// se o iCloud Drive não estiver disponível, usa o Application Support.
 @MainActor
 final class PersistenceController {
     static let shared = PersistenceController()
@@ -60,8 +60,8 @@ final class PersistenceController {
         location = .inMemory
     }
 
-    /// `~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest`, created on demand.
-    /// Requires the app to run outside the App Sandbox (see README).
+    /// `~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest`, criada sob demanda.
+    /// Exige que o app rode fora do App Sandbox (veja o README).
     static func iCloudDriveDirectory() -> URL? {
         let cloudDocs = FileManager.default.homeDirectoryForCurrentUser
             .appending(path: "Library/Mobile Documents/com~apple~CloudDocs", directoryHint: .isDirectory)
