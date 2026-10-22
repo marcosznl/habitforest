@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 import SwiftUI
 
 struct SettingsView: View {
@@ -18,9 +19,20 @@ private struct GeneralSettings: View {
     @AppStorage(SettingsKey.effectsVolume, store: AppGroup.defaults) private var effectsVolume = 0.6
     @AppStorage(SettingsKey.hapticsEnabled, store: AppGroup.defaults) private var haptics = true
     @AppStorage(SettingsKey.floatingWindow, store: AppGroup.defaults) private var floating = false
+    @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
+    @State private var loginError: String? = nil
 
     var body: some View {
         Form {
+            Section("Abertura") {
+                Toggle("Abrir ao iniciar sessão", isOn: $launchAtLogin)
+                    .onChange(of: launchAtLogin) { _, on in setLaunchAtLogin(on) }
+                Text("O HabitForest fica na barra de menus e mantém o Lembretes e o widget sincronizados mesmo com a janela fechada.")
+                    .font(.inter(.caption)).foregroundStyle(.secondary)
+                if let loginError {
+                    Text(loginError).font(.inter(.caption)).foregroundStyle(.red)
+                }
+            }
             Section("Janela") {
                 Toggle("Manter janela flutuando acima das outras", isOn: $floating)
                     .onChange(of: floating) { _, _ in MainWindowController.shared.applyFloatingPreference() }
@@ -40,6 +52,20 @@ private struct GeneralSettings: View {
             }
         }
         .formStyle(.grouped)
+    }
+
+    private func setLaunchAtLogin(_ on: Bool) {
+        do {
+            if on {
+                try SMAppService.mainApp.register()
+            } else {
+                try SMAppService.mainApp.unregister()
+            }
+            loginError = nil
+        } catch {
+            loginError = error.localizedDescription
+            launchAtLogin = SMAppService.mainApp.status == .enabled
+        }
     }
 }
 
@@ -83,6 +109,11 @@ private struct IntegrationSettings: View {
                             await eventKit.syncReminders(store: store)
                         }
                     }
+                Text("Cada hábito vira um lembrete diário na lista HabitForest. Marcar no Lembretes (no Mac ou no iPhone) rega a árvore, e regar aqui marca o lembrete. Com o app fechado, tudo é conciliado na próxima abertura.")
+                    .font(.inter(.caption)).foregroundStyle(.secondary)
+                if remindersSync, let last = eventKit.lastReminderSync {
+                    LabeledContent("Última sincronização", value: last.formatted(date: .omitted, time: .shortened))
+                }
                 if let error = eventKit.lastError {
                     Text(error).font(.inter(.caption)).foregroundStyle(.red)
                 }

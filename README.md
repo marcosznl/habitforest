@@ -27,7 +27,7 @@ open HabitForest.xcodeproj
 
 - **Saúde:** `.healthy` (em dia) → `.struggling` (1 dia falhado; a sequência ainda pode ser salva) → `.withered` (2 dias seguidos falhados; a sequência zera).
 - **Estufa:** pausa o hábito nas férias. Os dias pausados não contam e não quebram a sequência, mesmo depois de sair da estufa (ficam gravados como `HabitLog.isFrozen`).
-- **Hábitos:** cada linha mostra a árvore do hábito (clique nela para trocar a espécie), as últimas duas semanas com legenda e o botão **Regar** de hoje.
+- **Hábitos:** cada linha mostra a árvore do hábito (clique nela para trocar a espécie), as últimas duas semanas e o botão **Regar** de hoje.
 - **Floresta:** ilha isométrica que começa vazia e ganha uma árvore a cada dia regado (últimos 60 dias), no estágio daquele dia: brotos no começo da sequência, árvores maiores depois. Dias não regados não deixam árvores mortas.
 - **Diário:** ao regar o dia de hoje abre-se um campo de uma linha (`HabitLog.dailyNote`).
 - **Cenário:** a luz do fundo muda conforme o horário (manhã, tarde, pôr do sol, noite), a ilha e as árvores mudam com a estação (grama, areia de outono, neve; o hemisfério é detectado pela região ou definido em Ajustes) e o clima é sorteado por dia (chuva, neve, pétalas, folhas, vaga-lumes).
@@ -42,11 +42,13 @@ open HabitForest.xcodeproj
 | Filtros de Foco (Trabalho / Pessoal / Não Perturbe) | `Intents/AppIntents.swift` (`HabitFocusFilter`) |
 | Notificações com “Regar Árvore” / “Adiar 15 min” | `Managers/NotificationManager.swift` |
 | Som ambiente (chuva, vento, floresta) e efeitos, sintetizados em tempo real | `Managers/AudioManager.swift` |
-| Blocos de foco no Calendário, sincronização com Lembretes | `Managers/EventKitManager.swift` |
+| Blocos de foco no Calendário, sincronização com Lembretes nos dois sentidos | `Managers/EventKitManager.swift` |
 | Retrato da Floresta (PNG) e backup JSON pelo menu Compartilhar | `Managers/ExportService.swift` |
 | Widget interativo na mesa | `Widget/HabitWidget.swift` |
 | Mapa de calor de 365 dias e conclusão por dia da semana | `Views/HeatmapView.swift` |
 | Atalhos / Siri | `ToggleHabitIntent`, `StartFocusIntent`, `OpenForestIntent` |
+
+**Lembretes:** com a sincronização ligada (Ajustes › Integrações), cada hábito vira um lembrete diário na lista HabitForest, criado com um dia de antecedência. Marcar ou desmarcar no Lembretes, no Mac ou no iPhone, rega ou desrega a árvore, e o contrário também vale. Com o app aberto (inclusive só na barra de menus) a sincronização acontece na hora; com o app fechado, os últimos 14 dias são conciliados na próxima abertura. Para ficar sempre aberto, ligue **Abrir ao iniciar sessão** em Ajustes › Geral.
 
 O Filtro de Foco é configurado em **Ajustes do Sistema › Foco › (um Foco) › Filtros de Foco › HabitForest**. Nele você escolhe qual contexto de hábitos aparece e se os lembretes ficam silenciados.
 

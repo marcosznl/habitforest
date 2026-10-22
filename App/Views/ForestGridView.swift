@@ -29,7 +29,7 @@ struct ForestGridView: View {
                 }
 
                 ForestIslandView(trees: Self.islandTrees(for: store.visibleHabits), season: season, animated: true)
-                    .frame(height: 430)
+                    .frame(height: 600)
                     .frame(maxWidth: .infinity)
 
                 Text("Suas árvores").font(.rubik(.title2))

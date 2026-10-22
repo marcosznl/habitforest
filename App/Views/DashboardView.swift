@@ -101,7 +101,6 @@ struct DashboardView: View {
                                        description: Text("Clique em “Plantar hábito” (⌘N), escolha uma árvore e regue todo dia para ela crescer."))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                HabitMatrixLegend()
                 GeometryReader { proxy in
                     let layout = HabitMatrixLayout(width: proxy.size.width)
                     VStack(alignment: .leading, spacing: 6) {

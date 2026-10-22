@@ -220,31 +220,7 @@ struct HabitMatrixHeader: View {
     }
 }
 
-/// Legenda dos ícones da matriz e dica de uso.
-struct HabitMatrixLegend: View {
-    var body: some View {
-        HStack(spacing: 16) {
-            legend("Regada", icon: AnyView(TreeView(species: .oak, stage: .young, showsGround: false)))
-            legend("Pendente hoje", icon: AnyView(Image(systemName: "drop").foregroundStyle(.secondary)))
-            legend("Não regada", icon: AnyView(StumpView()))
-            legend("Na Estufa", icon: AnyView(Image(systemName: "snowflake").foregroundStyle(.cyan)))
-            Spacer()
-            Text("Clique num dia para marcar ou desmarcar · clique na árvore para trocar a espécie · botão direito para mais opções")
-                .font(.inter(.caption))
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.trailing)
-        }
-    }
-
-    private func legend(_ title: String, icon: AnyView) -> some View {
-        HStack(spacing: 5) {
-            icon.frame(width: 16, height: 16)
-            Text(title).font(.inter(.caption))
-        }
-    }
-}
-
-/// Grade com as nove espécies para escolher a árvore de um hábito.
+/// Grade com as espécies para escolher a árvore de um hábito.
 struct SpeciesPicker: View {
     @Binding var selection: TreeSpecies
     var stage: GrowthStage = .mature

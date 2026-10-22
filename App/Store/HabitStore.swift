@@ -73,6 +73,8 @@ final class HabitStore {
     }
 
     func delete(_ habit: Habit) {
+        let id = habit.id
+        Task { await EventKitManager.shared.removeReminders(forHabit: id) }
         context.delete(habit)
         commit()
         Haptics.perform(.generic)
