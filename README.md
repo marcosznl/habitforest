@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/marcosznl/habitforest/releases/latest"><b>⬇︎ Baixar o DMG</b></a>
+  <a href="https://github.com/marcosznl/habitos/releases/latest"><b>⬇︎ Baixar o DMG</b></a>
   &nbsp;·&nbsp; macOS 14 Sonoma ou mais novo &nbsp;·&nbsp; Apple Silicon e Intel &nbsp;·&nbsp; 3,9 MB
 </p>
 
@@ -142,7 +142,7 @@ Use o banco em um Mac por vez: o iCloud Drive sincroniza o arquivo inteiro e nã
 
 ## Instalar
 
-1. Baixe o `.dmg` na [página de releases](https://github.com/marcosznl/habitforest/releases/latest),
+1. Baixe o `.dmg` na [página de releases](https://github.com/marcosznl/habitos/releases/latest),
    abra e arraste o Hábitos para **Aplicativos**.
 2. O app não é notarizado pela Apple, então o macOS bloqueia na primeira vez. No macOS 14,
    clique com o botão direito no Hábitos → **Abrir**. No macOS 15 ou mais novo, tente abrir e
