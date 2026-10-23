@@ -12,6 +12,11 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/marcosznl/habitforest/releases/latest"><b>⬇︎ Baixar o DMG</b></a>
+  &nbsp;·&nbsp; macOS 14 Sonoma ou mais novo &nbsp;·&nbsp; Apple Silicon e Intel &nbsp;·&nbsp; 3,9 MB
+</p>
+
+<p align="center">
   <img src="docs/imagens/floresta.png" width="860" alt="A floresta em uma ilha isométrica">
 </p>
 
@@ -134,6 +139,14 @@ O banco SwiftData fica no iCloud Drive, em `~/Library/Mobile Documents/com~apple
 Por isso o app principal roda **sem App Sandbox**: um app em sandbox não consegue gravar nessa pasta. O widget, que precisa de sandbox, não abre o banco. Ele lê uma cópia leve publicada pelo app num App Group, e os toques no widget entram numa fila que o app aplica ao banco.
 
 Use o banco em um Mac por vez: o iCloud Drive sincroniza o arquivo inteiro e não mescla alterações feitas ao mesmo tempo em dois Macs.
+
+## Instalar
+
+1. Baixe o `.dmg` na [página de releases](https://github.com/marcosznl/habitforest/releases/latest),
+   abra e arraste o Hábitos para **Aplicativos**.
+2. O app não é notarizado pela Apple, então o macOS bloqueia na primeira vez. No macOS 14,
+   clique com o botão direito no Hábitos → **Abrir**. No macOS 15 ou mais novo, tente abrir e
+   depois vá em Ajustes do Sistema → Privacidade e Segurança → **Abrir Mesmo Assim**.
 
 ## Como compilar
 
