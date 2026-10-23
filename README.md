@@ -1,8 +1,10 @@
 <p align="center">
-  <img src="docs/imagens/icone.png" width="128" alt="Ícone do app Hábitos">
+  <img src="docs/imagens/capa.png" alt="Hábitos: cada hábito é uma árvore">
 </p>
 
-<h1 align="center">Hábitos</h1>
+<h1 align="center">
+  <img src="docs/imagens/icone.png" width="40" alt=""> Hábitos
+</h1>
 
 <p align="center">
   Rastreador de hábitos nativo para macOS em que cada hábito é uma árvore.<br>
