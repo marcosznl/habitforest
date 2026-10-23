@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8FE6BD164FC5EAF1CFAD3E69"
-               BuildableName = "HabitForest.app"
-               BlueprintName = "HabitForest"
-               ReferencedContainer = "container:HabitForest.xcodeproj">
+               BlueprintIdentifier = "BD951DC5EB9E67B420673E7E"
+               BuildableName = "Habitos.app"
+               BlueprintName = "Habitos"
+               ReferencedContainer = "container:Habitos.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,10 +29,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7F199356B538555588538D6F"
-               BuildableName = "HabitForestWidget.appex"
-               BlueprintName = "HabitForestWidget"
-               ReferencedContainer = "container:HabitForest.xcodeproj">
+               BlueprintIdentifier = "B790A2DEDB8F988DB4A096EE"
+               BuildableName = "HabitosWidget.appex"
+               BlueprintName = "HabitosWidget"
+               ReferencedContainer = "container:Habitos.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,10 +46,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8FE6BD164FC5EAF1CFAD3E69"
-            BuildableName = "HabitForest.app"
-            BlueprintName = "HabitForest"
-            ReferencedContainer = "container:HabitForest.xcodeproj">
+            BlueprintIdentifier = "BD951DC5EB9E67B420673E7E"
+            BuildableName = "Habitos.app"
+            BlueprintName = "Habitos"
+            ReferencedContainer = "container:Habitos.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -69,10 +69,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8FE6BD164FC5EAF1CFAD3E69"
-            BuildableName = "HabitForest.app"
-            BlueprintName = "HabitForest"
-            ReferencedContainer = "container:HabitForest.xcodeproj">
+            BlueprintIdentifier = "BD951DC5EB9E67B420673E7E"
+            BuildableName = "Habitos.app"
+            BlueprintName = "Habitos"
+            ReferencedContainer = "container:Habitos.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -88,10 +88,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8FE6BD164FC5EAF1CFAD3E69"
-            BuildableName = "HabitForest.app"
-            BlueprintName = "HabitForest"
-            ReferencedContainer = "container:HabitForest.xcodeproj">
+            BlueprintIdentifier = "BD951DC5EB9E67B420673E7E"
+            BuildableName = "Habitos.app"
+            BlueprintName = "Habitos"
+            ReferencedContainer = "container:Habitos.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

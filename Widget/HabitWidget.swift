@@ -3,7 +3,7 @@ import SwiftUI
 import WidgetKit
 
 @main
-struct HabitForestWidgetBundle: WidgetBundle {
+struct HabitosWidgetBundle: WidgetBundle {
     var body: some Widget {
         HabitWidget()
     }
@@ -12,7 +12,7 @@ struct HabitForestWidgetBundle: WidgetBundle {
 /// Widget interativo de mesa: a matriz de hábitos fixada no papel de parede, com um
 /// botão "Regar Árvore" por hábito.
 struct HabitWidget: Widget {
-    let kind = "HabitForestMatrix"
+    let kind = "HabitosMatrix"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: HabitTimelineProvider()) { entry in
@@ -21,7 +21,7 @@ struct HabitWidget: Widget {
                     SceneLayers(scenery: Scenery(date: entry.date), animated: false, showsHills: true)
                         .overlay(Color.black.opacity(0.15))
                 }
-                .widgetURL(URL(string: "habitforest://habitos"))
+                .widgetURL(URL(string: "habitos://habitos"))
         }
         .configurationDisplayName("Floresta de Hábitos")
         .description("Sua matriz de hábitos com árvores que crescem a cada dia.")

@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 @main
-struct HabitForestApp: App {
+struct HabitosApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
@@ -10,7 +10,7 @@ struct HabitForestApp: App {
         // StatusItemController) para usar máscaras de estilo próprias do NSWindow e um atalho global.
         Settings {
             SettingsView()
-                .habitForestEnvironment()
+                .habitosEnvironment()
         }
         .commands { HabitCommands() }
     }
@@ -19,7 +19,7 @@ struct HabitForestApp: App {
 extension View {
     /// Injeta os serviços observáveis compartilhados e o contêiner do SwiftData.
     @MainActor
-    func habitForestEnvironment() -> some View {
+    func habitosEnvironment() -> some View {
         Typography.register()
         return self
             .font(.inter(.body))

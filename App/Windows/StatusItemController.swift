@@ -25,7 +25,7 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         popover.behavior = .transient
         popover.animates = true
         popover.delegate = self
-        popover.contentViewController = NSHostingController(rootView: MenuBarPopoverView().habitForestEnvironment())
+        popover.contentViewController = NSHostingController(rootView: MenuBarPopoverView().habitosEnvironment())
     }
 
     @objc private func statusItemClicked() {

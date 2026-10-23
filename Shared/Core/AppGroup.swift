@@ -2,20 +2,20 @@ import Foundation
 
 /// Contêiner compartilhado entre o app e a extensão do widget.
 ///
-/// O identificador vem do Info.plist (`HFAppGroupIdentifier`), que expande
+/// O identificador vem do Info.plist (`HabitosAppGroupIdentifier`), que expande
 /// `$(TeamIdentifierPrefix)` na compilação e por isso sempre bate com o entitlement.
 enum AppGroup {
     static let identifier: String = {
-        let fromPlist = Bundle.main.object(forInfoDictionaryKey: "HFAppGroupIdentifier") as? String
+        let fromPlist = Bundle.main.object(forInfoDictionaryKey: "HabitosAppGroupIdentifier") as? String
         if let fromPlist, !fromPlist.isEmpty, !fromPlist.contains("$(") { return fromPlist }
-        return "com.marcosznl.habitforest"
+        return "com.marcosznl.habitos"
     }()
 
     static var containerURL: URL {
         if let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier) {
             return url
         }
-        let fallback = URL.applicationSupportDirectory.appending(path: "HabitForest", directoryHint: .isDirectory)
+        let fallback = URL.applicationSupportDirectory.appending(path: "Hábitos", directoryHint: .isDirectory)
         try? FileManager.default.createDirectory(at: fallback, withIntermediateDirectories: true)
         return fallback
     }

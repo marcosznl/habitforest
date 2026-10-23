@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 /// Monta o contêiner do SwiftData. Por padrão o banco fica no iCloud Drive do usuário
-/// (`~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest/`), para sobreviver a reinstalações;
+/// (`~/Library/Mobile Documents/com~apple~CloudDocs/Hábitos/`), para sobreviver a reinstalações;
 /// se o iCloud Drive não estiver disponível, usa o Application Support.
 @MainActor
 final class PersistenceController {
@@ -40,12 +40,12 @@ final class PersistenceController {
         let wantsICloud = AppGroup.defaults.bool(forKey: SettingsKey.useICloudDrive)
         var candidates: [(URL, Location)] = []
         if wantsICloud, let drive = Self.iCloudDriveDirectory() {
-            candidates.append((drive.appending(path: "HabitForest.store"), .iCloudDrive))
+            candidates.append((drive.appending(path: "Habitos.store"), .iCloudDrive))
         }
-        candidates.append((Self.localDirectory().appending(path: "HabitForest.store"), .local))
+        candidates.append((Self.localDirectory().appending(path: "Habitos.store"), .local))
 
         for (url, location) in candidates {
-            let config = ModelConfiguration("HabitForest", schema: Self.schema, url: url, cloudKitDatabase: .none)
+            let config = ModelConfiguration("Habitos", schema: Self.schema, url: url, cloudKitDatabase: .none)
             if let container = try? ModelContainer(for: Self.schema, configurations: config) {
                 self.container = container
                 self.storeURL = url
@@ -60,13 +60,13 @@ final class PersistenceController {
         location = .inMemory
     }
 
-    /// `~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest`, criada sob demanda.
+    /// `~/Library/Mobile Documents/com~apple~CloudDocs/Hábitos`, criada sob demanda.
     /// Exige que o app rode fora do App Sandbox (veja o README).
     static func iCloudDriveDirectory() -> URL? {
         let cloudDocs = FileManager.default.homeDirectoryForCurrentUser
             .appending(path: "Library/Mobile Documents/com~apple~CloudDocs", directoryHint: .isDirectory)
         guard FileManager.default.fileExists(atPath: cloudDocs.path(percentEncoded: false)) else { return nil }
-        let folder = cloudDocs.appending(path: "HabitForest", directoryHint: .isDirectory)
+        let folder = cloudDocs.appending(path: "Hábitos", directoryHint: .isDirectory)
         do {
             try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
             return folder
@@ -76,7 +76,7 @@ final class PersistenceController {
     }
 
     static func localDirectory() -> URL {
-        let folder = URL.applicationSupportDirectory.appending(path: "HabitForest", directoryHint: .isDirectory)
+        let folder = URL.applicationSupportDirectory.appending(path: "Hábitos", directoryHint: .isDirectory)
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         return folder
     }

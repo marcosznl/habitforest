@@ -22,17 +22,17 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.marcosznl.habitforest</string>
+			<string>com.marcosznl.habitos</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>habitforest</string>
+				<string>habitos</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>HFAppGroupIdentifier</key>
-	<string>$(TeamIdentifierPrefix)com.marcosznl.habitforest</string>
+	<key>HabitosAppGroupIdentifier</key>
+	<string>$(TeamIdentifierPrefix)com.marcosznl.habitos</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>

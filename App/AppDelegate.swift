@@ -48,9 +48,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Continua rodando na barra de menus depois que a janela fecha.
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
 
-    /// Links `habitforest://` vindos do widget e dos eventos do Calendário.
+    /// Links `habitos://` vindos do widget e dos eventos do Calendário.
     func application(_ application: NSApplication, open urls: [URL]) {
-        for url in urls where url.scheme == "habitforest" {
+        for url in urls where url.scheme == "habitos" {
             if url.host() == "barra" {
                 StatusItemController.shared.showPopover()
                 continue

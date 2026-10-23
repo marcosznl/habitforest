@@ -20,8 +20,8 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>HFAppGroupIdentifier</key>
-	<string>$(TeamIdentifierPrefix)com.marcosznl.habitforest</string>
+	<key>HabitosAppGroupIdentifier</key>
+	<string>$(TeamIdentifierPrefix)com.marcosznl.habitos</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>

@@ -9,9 +9,7 @@ final class EventKitManager {
     static let shared = EventKitManager()
 
     static let calendarTitle = "Hábitos"
-    /// Nome usado antes da troca do nome do app; a lista/calendário antigo é renomeado.
-    private static let legacyCalendarTitle = "HabitForest"
-    private static let urlScheme = "habitforest"
+    private static let urlScheme = "habitos"
 
     @ObservationIgnored private let store = EKEventStore()
     private(set) var calendarAuthorized = false
@@ -32,9 +30,9 @@ final class EventKitManager {
     }
 
     /// Na abertura: se a sincronização está ligada e o acesso ao Lembretes ainda não foi pedido,
-    /// pede uma vez e já sincroniza (criando a lista HabitForest).
+    /// pede uma vez e já sincroniza (criando a lista Hábitos).
     func prepareRemindersSync(_ habitStore: HabitStore) async {
-        guard AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) else { return }
+        guard !DemoMode.isActive, AppGroup.defaults.bool(forKey: SettingsKey.remindersSync) else { return }
         if EKEventStore.authorizationStatus(for: .reminder) == .notDetermined {
             await requestRemindersAccess()
         }
@@ -118,16 +116,9 @@ final class EventKitManager {
         }
     }
 
-    /// Calendário ou lista do app; se ainda estiver com o nome antigo, renomeia para "Hábitos".
+    /// Calendário ou lista do app.
     private func existingCalendar(for type: EKEntityType) -> EKCalendar? {
-        let calendars = store.calendars(for: type)
-        if let current = calendars.first(where: { $0.title == Self.calendarTitle }) {
-            return current
-        }
-        guard let legacy = calendars.first(where: { $0.title == Self.legacyCalendarTitle }) else { return nil }
-        legacy.title = Self.calendarTitle
-        try? store.saveCalendar(legacy, commit: true)
-        return legacy
+        store.calendars(for: type).first { $0.title == Self.calendarTitle }
     }
 
     // MARK: - Sincronização com o Lembretes

@@ -3,7 +3,7 @@ import Foundation
 /// O que o Foco ativo do macOS pediu; gravado pelo `HabitFocusFilter` e lido pelo store
 /// e pelo `NotificationManager`.
 struct FocusFilterState: Equatable {
-    static let didChangeNotification = Notification.Name("HabitForestFocusFilterDidChange")
+    static let didChangeNotification = Notification.Name("HabitosFocusFilterDidChange")
 
     var context: HabitContext
     var muteReminders: Bool

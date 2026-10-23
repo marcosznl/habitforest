@@ -149,7 +149,7 @@ private struct StorageSettings: View {
                         .truncationMode(.middle)
                     }
                 }
-                Toggle("Salvar no iCloud Drive (HabitForest/)", isOn: $useICloudDrive)
+                Toggle("Salvar no iCloud Drive (Hábitos/)", isOn: $useICloudDrive)
                 Text("A mudança vale na próxima abertura do app. Use o banco em um Mac por vez para evitar conflitos de sincronização.")
                     .font(.inter(.caption)).foregroundStyle(.secondary)
             }

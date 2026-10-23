@@ -130,11 +130,11 @@ Widget interativo para a mesa e para a Central de Notificações, em quatro tama
 | **Janela** | Sem bordas e translúcida, com opção de ficar sempre por cima das outras. |
 | **Cenário** | A luz do fundo segue o horário (manhã, tarde, pôr do sol, noite), e o clima do dia (chuva, neve, pétalas, folhas, vaga-lumes) aparece em partículas. |
 | **Abrir ao iniciar sessão** | Opção em Ajustes › Geral para o app ficar sempre ativo na barra de menus. |
-| **Links** | `habitforest://habitos`, `floresta`, `foco`, `estatisticas`, `estufa` e `barra` abrem cada tela. |
+| **Links** | `habitos://habitos`, `floresta`, `foco`, `estatisticas`, `estufa` e `barra` abrem cada tela. |
 
 ## Dados
 
-O banco SwiftData fica no iCloud Drive, em `~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest/`, e acompanha o Mac em reinstalações. Se o iCloud Drive não estiver disponível, ou a opção estiver desligada em Ajustes › Dados, ele vai para `~/Library/Application Support/HabitForest/`.
+O banco SwiftData fica no iCloud Drive, em `~/Library/Mobile Documents/com~apple~CloudDocs/Hábitos/`, e acompanha o Mac em reinstalações. Se o iCloud Drive não estiver disponível, ou a opção estiver desligada em Ajustes › Dados, ele vai para `~/Library/Application Support/Hábitos/`.
 
 Por isso o app principal roda **sem App Sandbox**: um app em sandbox não consegue gravar nessa pasta. O widget, que precisa de sandbox, não abre o banco. Ele lê uma cópia leve publicada pelo app num App Group, e os toques no widget entram numa fila que o app aplica ao banco.
 
@@ -155,11 +155,11 @@ Requer Xcode 16 ou mais novo (testado no Xcode 27.1) e [XcodeGen](https://github
 ```bash
 brew install xcodegen
 xcodegen generate
-open HabitForest.xcodeproj
+open Habitos.xcodeproj
 ```
 
-1. Em **Signing & Capabilities**, escolha seu Team nos alvos `HabitForest` e `HabitForestWidget`, ou preencha `DEVELOPMENT_TEAM` no `project.yml`. O App Group depende de um Team real; sem ele, o widget não enxerga os dados do app.
-2. Rode o esquema **HabitForest** (⌘R). O app gerado se chama **Hábitos.app**.
+1. Em **Signing & Capabilities**, escolha seu Team nos alvos `Habitos` e `HabitosWidget`, ou preencha `DEVELOPMENT_TEAM` no `project.yml`. O App Group depende de um Team real; sem ele, o widget não enxerga os dados do app.
+2. Rode o esquema **Habitos** (⌘R). O app gerado se chama **Hábitos.app**.
 
 ### Modo demonstração
 

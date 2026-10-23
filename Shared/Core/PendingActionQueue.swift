@@ -40,7 +40,7 @@ enum PendingActionQueue {
 
 /// Ponto de entrada para marcações que podem rodar dentro da extensão do widget.
 enum HabitActionRelay {
-    static let pendingActionsNotification = Notification.Name("com.marcosznl.habitforest.pendingActions")
+    static let pendingActionsNotification = Notification.Name("com.marcosznl.habitos.pendingActions")
 
     /// Inverte o estado de hoje do hábito no snapshot, enfileira para o app e acorda o app.
     @discardableResult

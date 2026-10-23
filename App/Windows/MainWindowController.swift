@@ -45,7 +45,7 @@ final class MainWindowController: NSObject, NSWindowDelegate {
         background.blendingMode = .behindWindow
         background.state = .followsWindowActiveState
 
-        let hosting = NSHostingView(rootView: DashboardView().habitForestEnvironment())
+        let hosting = NSHostingView(rootView: DashboardView().habitosEnvironment())
         hosting.translatesAutoresizingMaskIntoConstraints = false
         background.addSubview(hosting)
         NSLayoutConstraint.activate([
@@ -57,7 +57,7 @@ final class MainWindowController: NSObject, NSWindowDelegate {
         window.contentView = background
         window.contentMinSize = NSSize(width: 980, height: 600)
         window.center()
-        window.setFrameAutosaveName("HabitForestMainWindow")
+        window.setFrameAutosaveName("HabitosMainWindow")
         return window
     }
 }

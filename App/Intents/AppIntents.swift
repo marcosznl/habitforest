@@ -2,7 +2,7 @@ import AppIntents
 import Foundation
 
 /// Filtro de Foco: configure em Ajustes do Sistema › Foco › (Trabalho, Pessoal, Não Perturbe…) ›
-/// Filtros de Foco › HabitForest. O sistema chama `perform()` quando o Foco liga e de novo,
+/// Filtros de Foco › Hábitos. O sistema chama `perform()` quando o Foco liga e de novo,
 /// com os valores padrão, quando ele desliga, o que reinicia o filtro.
 struct HabitFocusFilter: SetFocusFilterIntent {
     static var title: LocalizedStringResource = "Filtrar hábitos"
@@ -60,7 +60,7 @@ struct OpenForestIntent: AppIntent {
     }
 }
 
-struct HabitForestShortcuts: AppShortcutsProvider {
+struct HabitosShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: ToggleHabitIntent(),

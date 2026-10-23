@@ -1,4 +1,4 @@
-name: HabitForest
+name: Habitos
 options:
   bundleIdPrefix: com.marcosznl
   deploymentTarget:
@@ -21,14 +21,14 @@ settings:
     DEAD_CODE_STRIPPING: YES
 
 targets:
-  HabitForest:
+  Habitos:
     type: application
     platform: macOS
     sources:
       - path: App
       - path: Shared
     dependencies:
-      - target: HabitForestWidget
+      - target: HabitosWidget
         embed: true
     info:
       path: App/Info.plist
@@ -39,33 +39,33 @@ targets:
         LSApplicationCategoryType: public.app-category.productivity
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
         NSHumanReadableCopyright: "© 2026 Marcos"
-        HFAppGroupIdentifier: $(TeamIdentifierPrefix)com.marcosznl.habitforest
+        HabitosAppGroupIdentifier: $(TeamIdentifierPrefix)com.marcosznl.habitos
         NSCalendarsFullAccessUsageDescription: O app Hábitos grava seus blocos de foco no Calendário e mostra a agenda do dia.
         NSCalendarsUsageDescription: O app Hábitos grava seus blocos de foco no Calendário e mostra a agenda do dia.
         NSRemindersFullAccessUsageDescription: O app Hábitos sincroniza seus hábitos diários com o app Lembretes.
         NSRemindersUsageDescription: O app Hábitos sincroniza seus hábitos diários com o app Lembretes.
         CFBundleURLTypes:
-          - CFBundleURLName: com.marcosznl.habitforest
-            CFBundleURLSchemes: [habitforest]
+          - CFBundleURLName: com.marcosznl.habitos
+            CFBundleURLSchemes: [habitos]
     entitlements:
-      path: App/HabitForest.entitlements
+      path: App/Habitos.entitlements
       properties:
-        # Sem sandbox: o banco fica em ~/Library/Mobile Documents/com~apple~CloudDocs/HabitForest.
+        # Sem sandbox: o banco fica em ~/Library/Mobile Documents/com~apple~CloudDocs/Hábitos.
         com.apple.security.application-groups:
-          - $(TeamIdentifierPrefix)com.marcosznl.habitforest
+          - $(TeamIdentifierPrefix)com.marcosznl.habitos
         com.apple.security.personal-information.calendars: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.marcosznl.habitforest
+        PRODUCT_BUNDLE_IDENTIFIER: com.marcosznl.habitos
         PRODUCT_NAME: Hábitos
-        PRODUCT_MODULE_NAME: HabitForest
-        EXECUTABLE_NAME: HabitForest
+        PRODUCT_MODULE_NAME: Habitos
+        EXECUTABLE_NAME: Habitos
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_APP_SANDBOX: NO
         COMBINE_HIDPI_IMAGES: YES
 
-  HabitForestWidget:
+  HabitosWidget:
     type: app-extension
     platform: macOS
     sources:
@@ -77,29 +77,29 @@ targets:
         CFBundleDisplayName: Hábitos
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        HFAppGroupIdentifier: $(TeamIdentifierPrefix)com.marcosznl.habitforest
+        HabitosAppGroupIdentifier: $(TeamIdentifierPrefix)com.marcosznl.habitos
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:
-      path: Widget/HabitForestWidget.entitlements
+      path: Widget/HabitosWidget.entitlements
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
-          - $(TeamIdentifierPrefix)com.marcosznl.habitforest
+          - $(TeamIdentifierPrefix)com.marcosznl.habitos
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.marcosznl.habitforest.widget
-        PRODUCT_NAME: HabitForestWidget
+        PRODUCT_BUNDLE_IDENTIFIER: com.marcosznl.habitos.widget
+        PRODUCT_NAME: HabitosWidget
         SKIP_INSTALL: YES
         ENABLE_APP_SANDBOX: YES
         LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks
 
 schemes:
-  HabitForest:
+  Habitos:
     build:
       targets:
-        HabitForest: all
-        HabitForestWidget: all
+        Habitos: all
+        HabitosWidget: all
     run:
       config: Debug
     archive:
